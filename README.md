@@ -10,6 +10,10 @@ https://github.com/user-attachments/assets/153ea4bf-3702-4a12-9a14-b80c25e7e183
 
 *The trailer: real games played With AI, edited by code from the game's own event logs.*
 
+https://github.com/user-attachments/assets/17f7c9b1-cbb3-46f0-8ddb-758592076aab
+
+*Under the hood: 100 neighbors deciding in one batch on one GPU, the card the model read, the JSON it answered and the engine's verdict, base against fine-tuned.*
+
 ![A game in ten seconds](assets/rumor-village.gif)
 
 ## Download and play
@@ -75,10 +79,6 @@ The full player guide: [docs/guia-jugador.en.md](docs/guia-jugador.en.md).
 - **The model proposes and the engine decides.** No action is applied without validation; the state travels as structured data, and nobody decides from the text of a bubble.
 - **Every decision goes through the model**, in one batched loop of llama.cpp embedded in a C++ engine with integer-only simulation, so a game with the same seed replays exactly.
 - **A model trained for the game.** The base model needed a 921-token prompt per decision; the fine-tuned one reads a 256-token card and makes far fewer mistakes (below).
-
-https://github.com/user-attachments/assets/17f7c9b1-cbb3-46f0-8ddb-758592076aab
-
-*The technical clip: the batch panel, the card the model read, the JSON it answered and the engine's verdict, base against fine-tuned.*
 
 ![The batch panel: every neighbor deciding in one batch](assets/dev-batch-panel.jpg)
 
