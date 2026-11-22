@@ -14,8 +14,6 @@ https://github.com/user-attachments/assets/17f7c9b1-cbb3-46f0-8ddb-758592076aab
 
 *Under the hood: 100 neighbors deciding in one batch on one GPU, the card the model read, the JSON it answered and the engine's verdict, base against fine-tuned.*
 
-![A game in ten seconds](assets/rumor-village.gif)
-
 ## Download and play
 
 No installer, no account, no internet needed to play. Pick the package for your computer from the [latest release](https://github.com/manuelgscom/rumor-village/releases/latest):
