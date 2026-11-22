@@ -4,8 +4,6 @@
 
 [![Play in your browser](https://img.shields.io/badge/play%20in%20your%20browser-web%20demo-1f6feb)](https://manuelgs.com/en/rumor-village/demo/) [![Download for Linux and Windows](https://img.shields.io/badge/download-Linux%20%C2%B7%20Windows-2ea44f)](https://github.com/manuelgscom/rumor-village/releases/latest) [![Model on Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20model-rumor--village--e4b--GGUF-FFD21E)](https://huggingface.co/manuelgscom/rumor-village-e4b-GGUF) [![license: MIT](https://img.shields.io/badge/code-MIT-e36209)](LICENSE) [![model: Apache-2.0](https://img.shields.io/badge/model-Apache--2.0-e36209)](https://huggingface.co/manuelgscom/rumor-village-e4b-GGUF/blob/main/LICENSE) [![llama.cpp: CUDA or Vulkan](https://img.shields.io/badge/llama.cpp-CUDA%20%C2%B7%20Vulkan-8250df)](https://github.com/ggml-org/llama.cpp)
 
-Website: <https://manuelgs.com/en/rumor-village/> · **[Play the web demo](https://manuelgs.com/en/rumor-village/demo/)**, in your browser, no download
-
 https://github.com/user-attachments/assets/153ea4bf-3702-4a12-9a14-b80c25e7e183
 
 *The trailer: real games played With AI, edited by code from the game's own event logs.*
