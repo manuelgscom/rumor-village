@@ -1,7 +1,5 @@
 # Player guide
 
-Versión en castellano: guia-jugador.md
-
 > **Status:** describes version 1.0.0 of the game: the downloaded packages for Linux and Windows and the web version. The game works **offline, no accounts**; it only connects once, to download the AI (5.34 GB) from Hugging Face.
 
 Rumor Village is a rumor game. You have a village of neighbors who walk around, chat and tell each other things. You drop a rumor and watch it run from mouth to mouth, how it gets twisted along the way and who ends up in the square at the wrong time.
