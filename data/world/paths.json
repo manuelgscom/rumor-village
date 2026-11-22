@@ -1,0 +1,33 @@
+{
+  "units_per_tick": 60,
+  "junctions": [
+    {"key": "river_road", "x": 390, "y": 570}
+  ],
+  "edges": [
+    ["square", "church"],
+    ["square", "town_hall"],
+    ["square", "bar"],
+    ["square", "bakery"],
+    ["square", "pharmacy"],
+    ["square", "market"],
+    ["church", "fountain"],
+    ["town_hall", "fountain"],
+    ["town_hall", "school"],
+    ["fountain", "school"],
+    ["fountain", "upper_quarter"],
+    ["school", "upper_quarter"],
+    ["school", "chapel"],
+    ["chapel", "east_quarter"],
+    ["market", "east_quarter"],
+    ["market", "bakery"],
+    ["pharmacy", "west_quarter"],
+    ["church", "west_quarter"],
+    ["west_quarter", "mill"],
+    ["bakery", "lower_quarter"],
+    ["lower_quarter", "river"],
+    ["mill", "river_road"],
+    ["river_road", "river"],
+    ["river_road", "bar"],
+    ["river_road", "lower_quarter"]
+  ]
+}

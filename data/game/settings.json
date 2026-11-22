@@ -1,0 +1,18 @@
+{
+  "format": 1,
+  "trait_mix": {
+    "quiet": ["prudent", "discreet", "shy"],
+    "talkative": ["gossip", "sociable", "exaggerator"],
+    "weights": {
+      "-2": { "quiet": 4, "talkative": 1 },
+      "-1": { "quiet": 2, "talkative": 1 },
+      "1": { "quiet": 1, "talkative": 2 },
+      "2": { "quiet": 1, "talkative": 4 }
+    }
+  },
+  "distortion": {
+    "low": { "forget_permille": 250, "doubt_drop_permille": 250 },
+    "normal": { "forget_permille": 1000, "doubt_drop_permille": 1000 },
+    "high": { "forget_permille": 4000, "doubt_drop_permille": 4000 }
+  }
+}

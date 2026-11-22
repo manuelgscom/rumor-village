@@ -1,0 +1,117 @@
+/* Banner (viewer/js/banner/): the ⓘ button and its menu. The banner itself
+   (glass, mode pill, run text) is in core.css; the menu hangs below it, so the
+   banner lets it overflow and the run text keeps its own ellipsis. */
+
+.banner.bn {
+  overflow: visible;
+  z-index: 6;
+}
+
+.bn .banner-run {
+  min-width: 0;
+}
+
+.bn-info {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-left: -4px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.bn-info svg {
+  width: 20px;
+  height: 20px;
+}
+
+.bn-info:hover,
+.bn-info.on {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.bn-info:focus-visible,
+.bn-copy:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.bn-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 280px;
+  max-width: min(440px, calc(100vw - 2 * var(--edge)));
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--shadow);
+  white-space: normal;
+  font-size: 13px;
+}
+
+.bn-menu[hidden] {
+  display: none;
+}
+
+.bn-rows {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 14px;
+  margin: 0 0 10px;
+}
+
+.bn-rows dt {
+  color: var(--faint);
+  font-weight: 700;
+}
+
+.bn-rows dd {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bn-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bn-copy {
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bn-copy:hover {
+  background: var(--accent-soft);
+}
+
+.bn-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.bn-note.bad {
+  color: var(--c-wrong);
+}

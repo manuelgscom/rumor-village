@@ -1,0 +1,30 @@
+{
+  "settings": {
+    "type": "village",
+    "neighbors": 25,
+    "town": 417,
+    "trait_mix": 0,
+    "distortion": "normal",
+    "lang": "es",
+    "mode": "rules"
+  },
+  "rumors": [
+    {
+      "fact": {
+        "what": "party",
+        "who": "n006",
+        "where": "square",
+        "when": "hoy 21:00",
+        "amount": 50
+      },
+      "text": null,
+      "to": {
+        "neighbors": [
+          "n001"
+        ]
+      },
+      "at": "start"
+    }
+  ],
+  "challenge": "fill-the-square"
+}

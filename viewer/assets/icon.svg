@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The icon of the game (phase 10): a little house and a speech bubble, flat
+     colours. The favicon of viewer/index.html and play-web.html, and the icon
+     of the Linux AppImage (dist/linux/appimage.sh turns it into a 256x256 PNG). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <clipPath id="tile"><rect x="8" y="8" width="240" height="240" rx="48"/></clipPath>
+  <g clip-path="url(#tile)">
+    <rect x="8" y="8" width="240" height="240" fill="#bfe3f2"/>
+    <rect x="8" y="200" width="240" height="48" fill="#6cb867"/>
+  </g>
+  <!-- the house -->
+  <rect x="44" y="122" width="104" height="86" fill="#f6e7c8"/>
+  <path d="M30 128 L96 70 L162 128 Z" fill="#d9573b"/>
+  <rect x="82" y="160" width="28" height="48" rx="3" fill="#8a5a3b"/>
+  <rect x="56" y="140" width="20" height="20" rx="2" fill="#5aa9d6"/>
+  <rect x="118" y="140" width="20" height="20" rx="2" fill="#5aa9d6"/>
+  <!-- the speech bubble -->
+  <path d="M150 34 H222 A18 18 0 0 1 240 52 V94 A18 18 0 0 1 222 112 H190 L170 132 L174 112 H150 A18 18 0 0 1 132 94 V52 A18 18 0 0 1 150 34 Z"
+        fill="#ffffff" stroke="#2f3a4a" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="166" cy="73" r="8" fill="#2f3a4a"/>
+  <circle cx="186" cy="73" r="8" fill="#2f3a4a"/>
+  <circle cx="206" cy="73" r="8" fill="#2f3a4a"/>
+</svg>

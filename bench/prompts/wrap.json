@@ -1,0 +1,12 @@
+{
+  "qwen-hybrid": {
+    "pre": "<|im_start|>system\n",
+    "mid": "<|im_end|>\n<|im_start|>user\n",
+    "post": "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+  },
+  "gemma4": {
+    "pre": "<|turn>system\n",
+    "mid": "<turn|>\n<|turn>user\n",
+    "post": "<turn|>\n<|turn>model\n"
+  }
+}

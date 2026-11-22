@@ -1,0 +1,17 @@
+{
+  "shots": [
+    {
+      "id": "example-aerial",
+      "source": "20261119-220615-ai-t417",
+      "lang": "es",
+      "size": "1920x1080",
+      "fps": 30,
+      "seconds": 2,
+      "ticks": [[0, 1140], [1, 1290]],
+      "camera": [[0, { "x": 500, "y": 350, "zoom": 1 }], [1, { "x": 500, "y": 350, "zoom": 2.2 }]],
+      "ease": "inOut",
+      "warm": 2,
+      "ui": "photo"
+    }
+  ]
+}

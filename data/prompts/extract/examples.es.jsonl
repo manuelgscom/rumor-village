@@ -1,0 +1,6 @@
+{"text":"esta noche hay fiesta en la plaza a las 9","answer":{"what":"fiesta","who":null,"where":"plaza","when":"hoy 21:00","amount":null}}
+{"text":"A Luis le han tocado tres mil euros en la lotería","answer":{"what":"premio de lotería","who":"Luis","where":null,"when":null,"amount":3000}}
+{"text":"Elena se casa mañana en la iglesia a las once y media de la mañana","answer":{"what":"boda","who":"Elena","where":"iglesia","when":"mañana 11:30","amount":null}}
+{"text":"han multado a Pedro con 200 euros","answer":{"what":"multa","who":"Pedro","where":null,"when":null,"amount":200}}
+{"text":"mañana a las 8 de la tarde hay un concierto en el polideportivo para 50 personas","answer":{"what":"concierto","who":null,"where":"polideportivo","when":"mañana 20:00","amount":50}}
+{"text":"dicen que hay obras en la fuente","answer":{"what":"obra","who":null,"where":"fuente","when":null,"amount":null}}

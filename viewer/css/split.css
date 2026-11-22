@@ -1,0 +1,255 @@
+/* Package A of phase 6: split screen (viewer/js/split/). Uses the variables of core.css;
+   the bar reuses the .rp-* classes of replay.css.
+
+   ┌ .sp-side ─────────────────┬ .sp-side ─────────────────┐
+   │ .sp-head                  │ .sp-head                  │
+   │ iframe.sp-frame           │ iframe.sp-frame           │
+   ├ .sp-bar ──────────────────┴───────────────────────────┤
+   │ .rp  ◀◀ ▶ ▶▶ │ x1 x4 │ track │ clock │ .sp-recording  │
+   └───────────────────────────────────────────────────────┘ */
+
+.sp {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--gap);
+  height: 100vh;
+  padding: var(--gap);
+}
+
+.sp-sides {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+  min-height: 0;
+}
+
+.sp-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.sp-head {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.sp-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.sp-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  color: var(--muted);
+}
+
+.sp-model {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sp-fails {
+  margin-left: auto;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  cursor: help;
+}
+
+.sp-fails.some {
+  color: var(--c-wrong);
+}
+
+.sp-frame {
+  display: block;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+}
+
+/* Over both sides while they load, or with the error. */
+.sp-cover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 16px;
+  text-align: center;
+}
+
+.sp-cover[hidden] {
+  display: none;
+}
+
+.sp-cover.error {
+  flex-direction: column;
+  gap: 8px;
+  color: var(--c-wrong);
+  font-weight: 600;
+}
+
+.sp-cover .sp-detail {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* The header keeps its height from the first draw (the titles and the
+   model come with the headers): the scenes must not resize once ready. */
+.sp-label:empty::before {
+  content: '\00a0';
+}
+
+.sp-meta {
+  min-height: 1.4em;
+}
+
+.sp-bar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  min-height: 48px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+/* The track canvas has a width in pixels: never let it widen the page. */
+.sp-bar .rp {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sp-bar .rp-track {
+  overflow: hidden;
+}
+
+.sp-recording {
+  flex: 0 0 auto;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* Scoreboard (phase 8-2, 2.11): bars of fails.js under each title, each over
+   the larger of the two sides. Two columns of three rows:
+
+   decisiones     ██████████ 1413   inventado      █          2
+   charlas sin fin ████████   163   lo contrario              0
+   rechazadas     ██            2   dudas como seguras        0 */
+.sp-score {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-template-rows: repeat(3, auto);
+  gap: 3px 18px;
+  margin-top: 6px;
+  white-space: nowrap;
+}
+
+.sp-score:empty {
+  display: none;
+}
+
+.sp-row {
+  --c: var(--c-wrong);
+  display: grid;
+  grid-template-columns: minmax(0, 9em) minmax(0, 1fr) 3.2em;
+  align-items: center;
+  gap: 8px;
+  padding: 1px 4px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: help;
+}
+
+.sp-decisions {
+  --c: var(--accent);
+}
+
+.sp-rlabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.sp-track {
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--muted) 14%, transparent);
+  overflow: hidden;
+}
+
+.sp-fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--c);
+}
+
+.sp-anim .sp-fill {
+  transition: width var(--dur) var(--ease);
+}
+
+.sp-n {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--c);
+}
+
+.sp-row.zero .sp-n {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* A failure that goes up. */
+@keyframes sp-flash {
+  from {
+    background: color-mix(in srgb, var(--c-wrong) 32%, transparent);
+  }
+  to {
+    background: transparent;
+  }
+}
+
+.sp-row.flash {
+  animation: sp-flash var(--dur-slow) var(--ease-out) 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-row.flash {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .sp-score {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-flow: row;
+    grid-template-rows: none;
+  }
+}

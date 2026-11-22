@@ -1,0 +1,30 @@
+{
+  "settings": {
+    "type": "village",
+    "neighbors": 100,
+    "town": 7,
+    "trait_mix": 0,
+    "distortion": "normal",
+    "lang": "en",
+    "mode": "rules"
+  },
+  "rumors": [
+    {
+      "fact": {
+        "what": "party",
+        "who": "n006",
+        "where": "square",
+        "when": "today 21:00",
+        "amount": 50
+      },
+      "text": null,
+      "to": {
+        "neighbors": [
+          "n001"
+        ]
+      },
+      "at": "start"
+    }
+  ],
+  "challenge": null
+}

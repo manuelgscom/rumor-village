@@ -1,0 +1,20 @@
+{
+  "format": 1,
+  "id": "broken-telephone",
+  "order": 4,
+  "title": { "es": "Teléfono roto", "en": "Broken telephone" },
+  "intro": {
+    "es": "Aquí ganas si el rumor se deforma: pasa por veinte vecinos en fila, y ganas un punto por cada uno que se entera sin la hora original y otro por cada media hora que se haya movido la hora al llegar al final de la fila. Tú eliges el rumor, con su hora, y el carácter del pueblo: cuántos cotillas y cuántos discretos hay en la fila.",
+    "en": "Here you win if the rumor gets distorted: it goes through twenty neighbors in a row, and you earn a point for each one who hears about it without the original time and another for each half hour the time has moved by the time it reaches the end of the row. You choose the rumor, with its time, and the character of the village: how many gossips and how many discreet neighbors there are in the row."
+  },
+  "settings": { "type": "telephone", "town": 20, "distortion": "normal" },
+  "rumor": { "fact": { "what": null, "who": null, "where": null, "when": null, "amount": null } },
+  "open": ["what", "who", "where", "when", "amount", "trait_mix", "mode"],
+  "max_to": 1,
+  "to_place": false,
+  "measure": "telephone_points",
+  "zero_if": null,
+  "subject": null,
+  "deadline": null,
+  "stars": { "ai": [11, 15, 17], "rules": [20, 23, 28] }
+}

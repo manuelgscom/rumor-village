@@ -1,0 +1,300 @@
+/* Package E of phase 9: «¿Qué pensó?» (viewer/js/inspect/). Uses the variables of core.css.
+
+   A card of the right column, under #side; empty, core.css hides it.
+
+   ┌ .column-right ────┐
+   │ #side             │
+   │ ┌ #inspect ── ✕ ┐ │   closed: one button «¿Qué pensó Elena? ›»
+   │ │ ¿Qué pensó?   │ │   open:   the decisions, newest first; each one
+   │ │ .in-…         │ │           unfolds what it read, decided and the
+   │ └───────────────┘ │           engine said (or the rule and the dice)
+   │ .dock             │
+   └───────────────────┘ */
+
+#inspect {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: 55%;
+  overflow: auto;
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+#inspect button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Closed: the whole card is the button. */
+#inspect:has(> .in-open-btn) {
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+#inspect .in-open-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 16px;
+  font-weight: 800;
+  color: var(--accent);
+  text-align: left;
+}
+
+#inspect .in-open-btn:hover,
+#inspect .in-row:hover {
+  background: var(--accent-soft);
+}
+
+.in-open-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.in-chev {
+  flex: 0 0 auto;
+  color: var(--faint);
+}
+
+/* Open: head and the list. */
+.in-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.in-title {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.in-who {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.in-mode {
+  margin-left: auto;
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.in-mode-ai {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+#inspect .in-close {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--muted);
+}
+
+#inspect .in-close:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.in-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.in-item + .in-item {
+  border-top: 1px solid var(--line);
+}
+
+#inspect .in-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 4px;
+  border-radius: var(--radius-sm);
+  text-align: left;
+}
+
+.in-time {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.in-sum {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.in-item-bad .in-time {
+  color: var(--c-wrong);
+}
+
+/* An unfolded decision. */
+.in-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 2px 0 10px 4px;
+  padding: 8px 10px;
+  border-left: 3px solid var(--accent-soft);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--surface-2);
+}
+
+.in-body[hidden] {
+  display: none;
+}
+
+.in-item-bad .in-body {
+  border-left-color: var(--c-wrong);
+}
+
+.in-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.in-h {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.in-said {
+  font-style: italic;
+  color: var(--muted);
+}
+
+.in-bad {
+  color: var(--c-wrong);
+  font-weight: 700;
+}
+
+.in-note {
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.in-list > .in-note {
+  padding: 6px 4px;
+}
+
+.in-read summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.in-card {
+  margin: 6px 0 0;
+  max-height: 220px;
+  overflow: auto;
+  padding: 8px;
+  border-radius: 8px;
+  background: var(--surface);
+  font-family: var(--font);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.in-verdicts,
+.in-rolls {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.in-v {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.in-slot {
+  flex: 0 0 4.6em;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.in-val {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-weight: 700;
+}
+
+.in-vtext {
+  flex: 1 1 auto;
+  text-align: right;
+  font-size: 12px;
+  color: var(--c-correct);
+}
+
+.in-v-muted .in-val,
+.in-v-muted .in-vtext {
+  color: var(--faint);
+  font-weight: 400;
+}
+
+.in-v-bad .in-vtext,
+.in-v-bad .in-val {
+  color: var(--c-wrong);
+  font-weight: 700;
+}
+
+.in-v-warn .in-vtext {
+  color: #b86e00;
+}
+
+.in-rolls li {
+  padding-left: 12px;
+  text-indent: -12px;
+}
+
+.in-rolls li::before {
+  content: '• ';
+  color: var(--accent);
+}
+
+/* The greetings and goodbyes, folded in one line (phase 9-5). */
+#inspect .in-small {
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}

@@ -1,0 +1,564 @@
+/* Package B: rewind and timeline (viewer/js/replay/). Uses the variables of core.css.
+   The split screen (split.css) reuses these classes for its own bar.
+
+   ⏮ (▶) ⏭ │ [x1|x4|rápida] │ ‹ [▼ se deforma ›] │ ◆──▼──── 18:00 ░░ 21:00 ▓▓▐▓▓ │ ☀ 17:35   │ ● EN DIRECTO
+                                                 ◆ entra el rumor ▼ se deforma … │   martes (· t 1055) */
+
+.rp {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  height: 52px;
+  user-select: none;
+}
+
+.rp-group {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.rp-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  min-width: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: 700 13px/1 var(--font);
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.rp-btn:hover {
+  background: var(--accent-soft);
+}
+
+.rp-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.rp-icon {
+  display: block;
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* Transport: a big round play between two small skips. */
+.rp-group:first-child {
+  gap: 4px;
+}
+
+.rp-start,
+.rp-end {
+  width: 34px;
+  padding: 0;
+  color: var(--muted);
+}
+
+.rp-start:hover,
+.rp-end:hover {
+  color: var(--accent);
+}
+
+.rp-play {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(58, 111, 216, 0.45);
+}
+
+.rp-play .rp-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.rp-play:hover {
+  background: var(--accent);
+  transform: scale(1.06);
+  box-shadow: 0 6px 18px rgba(58, 111, 216, 0.55);
+}
+
+.rp-play:active {
+  transform: scale(0.96);
+}
+
+/* Nothing to pause while the game is being prepared (phase 9-4). */
+.rp-play:disabled,
+.rp-play:disabled:hover {
+  opacity: 0.4;
+  transform: none;
+  box-shadow: none;
+  cursor: default;
+}
+
+/* Speed: a segmented control. */
+.rp-speeds {
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(30, 42, 54, 0.07);
+  box-shadow: inset 0 1px 2px rgba(18, 28, 45, 0.08);
+}
+
+.rp-speed {
+  height: 30px;
+  min-width: 40px;
+  padding: 0 12px;
+  color: var(--muted);
+}
+
+.rp-speed:hover {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--text);
+}
+
+.rp-speed.on,
+.rp-speed.on:hover {
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(58, 111, 216, 0.4);
+}
+
+/* Moments: previous and next mark of the track; the next one is named. */
+.rp-moments {
+  gap: 2px;
+}
+
+.rp-moments-label {
+  padding: 0 4px 0 2px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.rp-prev {
+  width: 30px;
+  min-width: 30px;
+  padding: 0;
+  color: var(--muted);
+}
+
+.rp-next {
+  gap: 6px;
+  max-width: 170px;
+  padding: 0 8px 0 12px;
+  background: rgba(30, 42, 54, 0.07);
+  font-size: 12.5px;
+}
+
+.rp-next .rp-glyph {
+  width: 10px;
+  height: 10px;
+}
+
+.rp-next .rp-icon {
+  width: 11px;
+  height: 11px;
+  color: var(--muted);
+}
+
+.rp-next-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rp-prev:disabled,
+.rp-next:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.rp-next:disabled:hover {
+  background: rgba(30, 42, 54, 0.07);
+}
+
+.rp-prev:disabled:hover {
+  background: transparent;
+}
+
+/* Track and its legend. */
+.rp-line {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 140px;
+}
+
+.rp-track {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 120px;
+  height: 40px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.rp-line .rp-track {
+  flex: 0 0 auto;
+}
+
+.rp-track:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.rp-track.on-mark {
+  cursor: pointer;
+}
+
+.rp-track.dragging {
+  cursor: grabbing;
+}
+
+.rp-canvas {
+  display: block;
+}
+
+.rp-legend {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  height: 12px;
+  overflow: hidden;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 12px;
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+.rp-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rp-glyph {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+}
+
+/* Tooltip over the track. */
+.rp-hover {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 0;
+  z-index: 20;
+  transform: translateX(-50%);
+  padding: 7px 12px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.rp-hover::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: calc(50% + var(--arrow, 0px));
+  margin-left: -6px;
+  border: 6px solid transparent;
+  border-top-color: var(--glass-strong);
+}
+
+.rp-hover-clock {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rp-hover-clock b {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.rp-hover-mark {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 4px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.rp-hover-mark .rp-glyph {
+  width: 11px;
+  height: 11px;
+}
+
+.rp-hover-hint {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+/* Clock: sun or moon, the hour big and the weekday under it. */
+.rp-time {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 104px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rp-clock {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rp-tick {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.rp-time.rich {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.rp-time-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 92px;
+}
+
+.rp-time.rich .rp-clock {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.rp-time.rich .rp-tick {
+  margin-top: 2px;
+  font-weight: 700;
+}
+
+.rp-sky-box {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff3cc;
+  box-shadow: inset 0 0 0 1px rgba(245, 166, 35, 0.35);
+}
+
+.rp-time.night .rp-sky-box {
+  background: #27325e;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.rp-sky {
+  width: 24px;
+  height: 24px;
+}
+
+.rp-sky.day {
+  fill: #f5a623;
+  stroke: #f5a623;
+  stroke-width: 2;
+}
+
+.rp-sky.night {
+  fill: #ffe7a1;
+}
+
+/* Live: a red pill while following, a button to come back when not. */
+.rp-live {
+  gap: 7px;
+  min-width: 150px;
+  height: 36px;
+  padding: 0 16px;
+  border: 2px solid var(--live);
+  color: var(--live);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.rp-live:hover {
+  background: rgba(224, 65, 58, 0.1);
+}
+
+.rp-live-arrow {
+  font-size: 18px;
+  line-height: 1;
+  margin-top: -2px;
+}
+
+.rp-live.following,
+.rp-live.following:hover {
+  border-color: var(--live);
+  background: var(--live);
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  cursor: default;
+  box-shadow: 0 3px 10px rgba(224, 65, 58, 0.4);
+}
+
+.rp-live:disabled {
+  opacity: 1;
+}
+
+.rp-live-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ffffff;
+  animation: rp-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes rp-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+}
+
+.rp-live.following.ended,
+.rp-live.following.ended:hover {
+  border-color: var(--faint);
+  background: var(--faint);
+  box-shadow: none;
+}
+
+.rp-live.ended .rp-live-dot {
+  animation: none;
+}
+
+/* Game mode before the game runs (bus 'game'): the clock is stopped, so the
+   pill is grey and still, not the red «EN DIRECTO». */
+.rp-live.following.preparing,
+.rp-live.following.preparing:hover {
+  border-color: var(--glass-edge);
+  background: var(--glass-strong);
+  color: var(--muted);
+  letter-spacing: 0;
+  box-shadow: none;
+}
+
+.rp-live.preparing .rp-live-dot {
+  background: currentColor;
+  animation: none;
+}
+
+/* Inside the game (phase 9-5): «Jugando» in the accent colour, not the red of
+   a live broadcast (red is «Terminar ya»). */
+:root[data-game] .rp-live.following:not(.preparing):not(.ended),
+:root[data-game] .rp-live.following:not(.preparing):not(.ended):hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: none;
+}
+
+:root[data-game] .rp-live:not(.following) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Live, looking at the past: the hour seen and the hour of the village. */
+.rp-behind {
+  flex: 0 1 auto;
+  max-width: 190px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--muted);
+}
+
+.rp-behind[hidden],
+.rp-group[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rp-live-dot {
+    animation: none;
+  }
+}
+
+/* Narrow windows: the clock loses its icon, the legend goes. */
+@media (max-width: 1100px) {
+  .rp {
+    gap: 10px;
+  }
+
+  .rp-sky-box,
+  .rp-legend {
+    display: none;
+  }
+
+  .rp-speed {
+    padding: 0 9px;
+  }
+
+  .rp-next-text {
+    display: none;
+  }
+
+  .rp-behind {
+    max-width: 140px;
+    font-size: 11px;
+  }
+}
+
+/* Phones (phase 8-1, 1.12): play, the track and the hour. */
+@media (max-width: 600px) {
+  .rp-speeds,
+  .rp-moments,
+  .rp-start,
+  .rp-end,
+  .rp-day,
+  .rp-behind {
+    display: none;
+  }
+
+  /* No room in the row: the live pill floats just above the bar's left
+     corner (the bar, .bar in core.css, is its containing block). */
+  .rp-live {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + var(--gap));
+    min-width: 0;
+    height: 30px;
+    padding: 0 12px;
+    font-size: 12px;
+    background: var(--glass-strong);
+    box-shadow: var(--shadow-soft);
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "ds-tel-09",
+  "layout": "line",
+  "neighbors": 20,
+  "start": {
+    "day": 0,
+    "time": "10:00"
+  },
+  "end": {
+    "day": 2,
+    "time": "16:00"
+  },
+  "start_weekday": 1,
+  "forget_ppm": 10000,
+  "doubt_drop_ppm": 20000,
+  "max_turns": 8,
+  "meet_ppm": 0,
+  "pair_cooldown": 0,
+  "rest_ticks": 0,
+  "stay_ticks": 0,
+  "hop_gap": 20,
+  "hop_retries": 5,
+  "injections": [
+    {
+      "at": {
+        "day": 0,
+        "time": "10:00"
+      },
+      "what": "lottery",
+      "text": null,
+      "who": "n013",
+      "where": "mill",
+      "when": {
+        "day": 1,
+        "time": "10:30"
+      },
+      "amount": 170000,
+      "to": [
+        "n001"
+      ]
+    }
+  ]
+}

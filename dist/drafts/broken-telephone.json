@@ -1,0 +1,29 @@
+{
+  "settings": {
+    "type": "telephone",
+    "town": 20,
+    "distortion": "normal",
+    "lang": "es",
+    "mode": "rules",
+    "trait_mix": -2
+  },
+  "rumors": [
+    {
+      "fact": {
+        "what": "party",
+        "who": "n006",
+        "where": "square",
+        "when": "hoy 21:00",
+        "amount": 50
+      },
+      "text": null,
+      "to": {
+        "neighbors": [
+          "n001"
+        ]
+      },
+      "at": "start"
+    }
+  ],
+  "challenge": "broken-telephone"
+}

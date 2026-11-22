@@ -1,0 +1,549 @@
+/* Package C (phase 7): what is written over the scene, in #labels.
+   Every element is placed with a transform from js/scene/labels.js or
+   js/scene/overlay/; the only animation here is the fade of the labels as
+   they show and hide (phase 8-2), which a capture turns off. Stacking,
+   bottom to top:
+   place labels · names · bubble tails · bubbles · chain labels. */
+
+.render-map {
+  cursor: grab;
+  touch-action: none;
+}
+
+.render-map.dragging {
+  cursor: grabbing;
+}
+
+.lbl-place,
+.lbl-name,
+.bubble,
+.chain-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+/* The labels stack among themselves, under the floating panels. */
+#labels {
+  isolation: isolate;
+}
+
+/* Labels fade in and out: opacity with a transition, and visibility follows
+   at the end of the fade, so a hidden label takes no clicks and offsetWidth
+   still measures it. Behind a building, a label dims. In a capture
+   (#labels.still) and with reduced motion (--dur 0) there is no fade. */
+.lbl-place,
+.lbl-name {
+  transition:
+    opacity var(--dur) var(--ease),
+    visibility 0s linear 0s;
+}
+
+#labels .behind,
+#labels.far .behind {
+  opacity: 0.3;
+}
+
+#labels .off,
+#labels.far .off {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur) var(--ease),
+    visibility 0s linear var(--dur);
+}
+
+#labels.still .lbl-place,
+#labels.still .lbl-name {
+  transition: none;
+}
+
+/* Places: icon in the tint of the kind of place, name, people there now and
+   a thin bar with the versions of the rumor they hold. */
+.lbl-place {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px 4px 3px;
+  border-radius: 999px;
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--shadow-soft);
+  color: var(--text);
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+}
+
+.lbl-icon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--tint, var(--muted));
+  color: #fff;
+  flex: none;
+}
+
+.lbl-icon svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lbl-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 6px 0 4px;
+  margin-right: -4px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.lbl-count svg {
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
+}
+
+.lbl-count[hidden],
+.lbl-bar[hidden] {
+  display: none;
+}
+
+.lbl-bar {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+}
+
+.lbl-place.lbl-home {
+  background: var(--glass);
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.lbl-home .lbl-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Far away the labels are smaller, to leave the village in view. */
+#labels.far .lbl-place {
+  font-size: 12px;
+  padding: 2px 8px 3px 2px;
+}
+
+#labels.far .lbl-home:not(.off):not(.behind) {
+  opacity: 0.85;
+}
+
+/* Names: dark pill; white for people talking; accent for the selected one.
+   Clickable: selects the neighbor. */
+.lbl-name {
+  z-index: 2;
+  padding: 1px 7px 2px;
+  border-radius: 999px;
+  background: rgba(20, 30, 45, 0.66);
+  color: #fff;
+  font-weight: 800;
+  font-size: 11.5px;
+  line-height: 16px;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.lbl-name.off {
+  pointer-events: none;
+}
+
+.lbl-name.talking {
+  background: var(--glass-strong);
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+}
+
+.lbl-name.selected {
+  background: var(--accent);
+  color: #fff;
+  font-size: 12.5px;
+  padding: 2px 9px 3px;
+  box-shadow: 0 0 0 2px #fff, var(--shadow-soft);
+}
+
+/* Map preview while preparing a game (phase 9-4, js/render/preview.js): a
+   warm ring and a small caption («Lo sabe primero», «Lugar de la fiesta»,
+   «Aquí empieza a contarse»). Warm, not red: a highlight, not a warning. */
+#labels {
+  --preview-ring: var(--warm);
+  --preview-ink: #9a4a10; /* 5.6:1 on --glass-strong */
+}
+
+.lbl-hint {
+  display: block;
+  color: var(--preview-ink);
+  font-size: 10.5px;
+  font-weight: 800;
+  line-height: 13px;
+  letter-spacing: 0.02em;
+}
+
+.lbl-hint[hidden] {
+  display: none;
+}
+
+.lbl-name.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2px 9px 3px;
+  border-radius: 10px;
+  background: var(--glass-strong);
+  color: var(--text);
+  font-size: 12.5px;
+  box-shadow: 0 0 0 2px var(--preview-ring), var(--shadow-soft);
+}
+
+.lbl-name.preview.selected {
+  background: var(--accent);
+  color: #fff;
+}
+
+.lbl-name.selected .lbl-hint {
+  color: #fff;
+}
+
+/* A place of the preview: the caption is a first line over the label. */
+.lbl-place.preview {
+  flex-wrap: wrap;
+  row-gap: 1px;
+  border-radius: 12px;
+  box-shadow: 0 0 0 2px var(--preview-ring), var(--shadow-soft);
+}
+
+.lbl-place .lbl-hint {
+  flex-basis: 100%;
+  padding: 1px 0 0 6px;
+}
+
+/* Speech bubbles (sizes in js/render/bubbles.js BUBBLE and BUBBLE_FONT). */
+.bubble-tails {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  z-index: 3;
+  filter: drop-shadow(0 2px 3px rgba(18, 28, 45, 0.22));
+}
+
+.bubble-tails .tail {
+  fill: var(--glass-strong);
+  stroke: rgba(30, 42, 54, 0.18);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.bubble-tails .tail-narration {
+  fill: rgba(244, 246, 249, 0.92);
+}
+
+.bubble-tails .tail-claim {
+  fill: #fdf8ea;
+  stroke: #b39a5a;
+}
+
+.bubbles {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+
+.bubble {
+  padding: 7px 12px;
+  border-radius: 14px;
+  background: var(--glass-strong);
+  border: 1px solid rgba(30, 42, 54, 0.1);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.bubble.fresh {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft), var(--shadow);
+}
+
+.bubble-who {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 17px;
+  color: var(--muted);
+  font: 800 12px/17px var(--font);
+}
+
+.bubble-who b {
+  color: var(--text);
+}
+
+.bubble-who i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c-unknown);
+  box-shadow: 0 0 0 1.5px #fff;
+  flex: none;
+}
+
+.bubble-text {
+  white-space: pre;
+}
+
+.bubble-text {
+  font: 600 14px/19px var(--font);
+}
+
+.bubble-claim {
+  background: #fdf8ea;
+  border: 1.5px dashed #b39a5a;
+  border-radius: 8px;
+}
+
+.bubble-claim .bubble-text {
+  font: 700 13px/18px var(--font);
+  color: #5a4a22;
+  letter-spacing: 0.01em;
+}
+
+/* With AI, a turn without a sentence of its own: a narrator tells it
+   (render/bubbles.js narration), so it does not look like words of the AI. */
+.bubble-narration {
+  background: rgba(244, 246, 249, 0.92);
+  border: 1px dashed rgba(30, 42, 54, 0.22);
+}
+
+.bubble-narration .bubble-text {
+  font: italic 600 13px/18px var(--font);
+  color: var(--muted);
+}
+
+.bubble-act {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--shadow-soft);
+}
+
+.bubble-act .bubble-text {
+  font: italic 600 13px/17px var(--font);
+  color: var(--muted);
+}
+
+/* Labels of the rumor chain: who started it, the culprit, the neighbor
+   selected and, at the top of the hop that changed it, «21:00 → 22:00». */
+.chain-tags {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+.chain-tag {
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: var(--tag, var(--text));
+  color: #fff;
+  font: 800 12.5px/22px var(--font);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), var(--shadow-soft);
+}
+
+.chain-tag[hidden] {
+  display: none;
+}
+
+.chain-change {
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.chain-culprit {
+  background: var(--c-wrong);
+}
+
+/* Card of the hovered neighbor (js/render/input.js attachHover): who it is
+   and what it believes against the original. The version pill carries a
+   shape as well as the color (✓ correct, ~ incomplete, ✗ distorted). */
+.hover-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  min-width: 180px;
+  max-width: 280px;
+  padding: 9px 12px 10px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  font-size: 12.5px;
+  line-height: 1.35;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hover-card[hidden] {
+  display: none;
+}
+
+.hc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.hc-name {
+  font-size: 14.5px;
+  font-weight: 900;
+}
+
+.hc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px 2px;
+  border-radius: 999px;
+  background: var(--v);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.hc-incomplete {
+  color: #4a3200;
+}
+
+.hc-none {
+  background: rgba(30, 42, 54, 0.08);
+  color: var(--muted);
+}
+
+.hc-glyph {
+  font-style: normal;
+  font-weight: 900;
+}
+
+.hc-role {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.hc-caption {
+  margin-top: 6px;
+  color: var(--faint);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hc-rows {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  column-gap: 8px;
+  margin-top: 2px;
+}
+
+.hc-row {
+  display: contents;
+}
+
+.hc-slot {
+  color: var(--muted);
+}
+
+.hc-now {
+  font-weight: 800;
+}
+
+.hc-changed .hc-now {
+  color: #b8374a;
+}
+
+.hc-missing .hc-now {
+  color: var(--faint);
+}
+
+.hc-orig {
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+/* ── #stats, fase 8-2 A ──────────────────────────────────────────────
+   Frame meter of the 3D scene (scene/stats.js), only with ?stats=1. */
+#stats:empty {
+  display: none;
+}
+
+#stats {
+  position: absolute;
+  top: var(--edge);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.st-panel {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(18, 28, 45, 0.78);
+  color: #f4f5f1;
+  box-shadow: var(--shadow-soft);
+}
+
+.st-text {
+  margin: 0;
+  font: 11px/1.35 var(--mono);
+  white-space: pre;
+}
+
+.st-copy {
+  font: 600 11px var(--font);
+  padding: 3px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.st-copy:hover {
+  background: rgba(255, 255, 255, 0.12);
+}

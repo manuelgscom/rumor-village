@@ -1,0 +1,58 @@
+{
+  "name": "ds-p100-03",
+  "layout": "village",
+  "neighbors": 100,
+  "start": {
+    "day": 0,
+    "time": "07:00"
+  },
+  "end": {
+    "day": 1,
+    "time": "00:00"
+  },
+  "start_weekday": 1,
+  "forget_ppm": 300,
+  "doubt_drop_ppm": 4000,
+  "max_turns": 8,
+  "meet_ppm": 50000,
+  "pair_cooldown": 120,
+  "rest_ticks": 5,
+  "stay_ticks": 90,
+  "hop_gap": 0,
+  "hop_retries": 0,
+  "injections": [
+    {
+      "at": {
+        "day": 0,
+        "time": "10:00"
+      },
+      "what": "wedding",
+      "text": null,
+      "who": "n026",
+      "where": null,
+      "when": {
+        "day": 1,
+        "time": "15:30"
+      },
+      "amount": 200,
+      "to": [
+        "n005"
+      ]
+    },
+    {
+      "at": {
+        "day": 0,
+        "time": "13:00"
+      },
+      "what": "inheritance",
+      "text": null,
+      "who": "n029",
+      "where": "mill",
+      "when": null,
+      "amount": 140000,
+      "to": [
+        "n010"
+      ]
+    }
+  ]
+}

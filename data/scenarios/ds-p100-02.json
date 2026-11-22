@@ -1,0 +1,40 @@
+{
+  "name": "ds-p100-02",
+  "layout": "village",
+  "neighbors": 100,
+  "start": {
+    "day": 0,
+    "time": "07:00"
+  },
+  "end": {
+    "day": 1,
+    "time": "00:00"
+  },
+  "start_weekday": 1,
+  "forget_ppm": 300,
+  "doubt_drop_ppm": 2000,
+  "max_turns": 8,
+  "meet_ppm": 50000,
+  "pair_cooldown": 120,
+  "rest_ticks": 5,
+  "stay_ticks": 90,
+  "hop_gap": 0,
+  "hop_retries": 0,
+  "injections": [
+    {
+      "at": {
+        "day": 0,
+        "time": "09:30"
+      },
+      "what": "lottery",
+      "text": null,
+      "who": "n041",
+      "where": null,
+      "when": null,
+      "amount": 27000,
+      "to": [
+        "n031"
+      ]
+    }
+  ]
+}

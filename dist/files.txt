@@ -1,0 +1,36 @@
+# What of viewer/ and data/ goes into a prebuilt package (phase 10), copied
+# with its folders as they are in the repo. One pattern per line, relative to
+# the repo: "**" is any number of folders, "*" any name within one; a line
+# starting with "!" takes out what an earlier line put in. dist/package/
+# assemble.sh reads it; nothing else is copied from these two folders.
+
+# The viewer of the game: the page, styles, modules, three.js and the assets.
+viewer/index.html
+viewer/css/**
+viewer/js/**
+viewer/vendor/three/three.module.js
+viewer/vendor/three/three.core.js
+viewer/vendor/three/addons/**
+viewer/vendor/three/LICENSE
+viewer/assets/**
+# Not the tests, the test helpers, the dev server or the web version.
+!viewer/js/**/*.test.js
+!viewer/js/core/testing.js
+!viewer/js/game/score/testlogs.js
+!viewer/js/live/devserver.mjs
+!viewer/js/**/README.md
+!viewer/js/web/**
+!viewer/assets/**/SHA256SUMS
+
+# The data the engine reads: world, people, words, the scenarios the game
+# starts from (party-25, party-100, telephone-20; not the dataset ones),
+# settings, challenges and the prompts of Con IA.
+data/world/**
+data/people/**
+data/vocab/**
+data/game/**
+data/challenges/**
+data/prompts/**
+data/scenarios/party-25.json
+data/scenarios/party-100.json
+data/scenarios/telephone-20.json

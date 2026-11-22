@@ -1,0 +1,20 @@
+{
+  "format": 1,
+  "id": "against-the-clock",
+  "order": 3,
+  "title": { "es": "Contrarreloj", "en": "Against the clock" },
+  "intro": {
+    "es": "Que la mitad del pueblo se entere de tu rumor antes de las 14:00. Tú eliges el rumor, a quién se lo cuentas (tres como mucho) y cuándo; cuanto antes llegue a la mitad, más estrellas.",
+    "en": "Get half the village to hear about your rumor before 14:00. You choose the rumor, who you tell (three at most) and when; the sooner it reaches half, the more stars."
+  },
+  "settings": { "type": "village", "neighbors": 25, "town": 17, "trait_mix": 0, "distortion": "normal", "until": "14:00" },
+  "rumor": { "fact": { "what": null, "who": null, "where": null, "when": null, "amount": null } },
+  "open": ["what", "who", "where", "when", "amount", "to", "at", "mode"],
+  "max_to": 3,
+  "to_place": false,
+  "measure": "half_tick",
+  "zero_if": null,
+  "subject": null,
+  "deadline": "14:00",
+  "stars": { "ai": [0,  30,  60], "rules": [0,  20,  45] }
+}

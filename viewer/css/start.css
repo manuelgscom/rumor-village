@@ -1,0 +1,403 @@
+/* Start screen, loading and error screens (package start, phase 8-1 A).
+
+   #start covers the window while <html> has data-start (the start screen),
+   data-loading or data-error. The start screen lets the village behind it
+   show (openBackground, data-background); the loading and error screens hide
+   the empty interface. Inside the game, data-lost: the game cannot be
+   reached (start/index.js showLost, phase 9-5). */
+
+#start {
+  display: none;
+}
+
+:root[data-start] #start,
+:root[data-loading] #start,
+:root[data-error] #start,
+:root[data-lost] #start {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: block;
+  font-family: var(--font);
+  color: var(--text);
+}
+
+/* The game cannot be reached: over everything, the summary of the day too. */
+:root[data-lost] #start {
+  z-index: 50;
+}
+
+/* While the start screen is up, the viewer's own interface is not seen. */
+:root[data-start] [data-zone],
+:root[data-start] .column,
+:root[data-background] [data-zone],
+:root[data-background] .column {
+  display: none !important;
+}
+
+.start-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  overflow: auto;
+}
+
+/* Start screen: the card on the left, the village on the right. */
+.start-home {
+  padding-left: max(24px, 6vw);
+  background: linear-gradient(90deg, rgba(244, 245, 241, 0.7), rgba(244, 245, 241, 0.25) 45%, rgba(244, 245, 241, 0) 70%);
+}
+
+/* Loading and error: centred over a plain sky. */
+.start-center {
+  justify-content: center;
+  background: linear-gradient(#8ec5f0, #dcefff);
+}
+
+.start-card {
+  width: min(560px, 100%);
+  padding: 28px 30px 24px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+}
+
+.start-card-small {
+  width: min(440px, 100%);
+}
+
+.start-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.start-title {
+  margin: 0;
+  font-size: 44px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.start-title-small {
+  font-size: 22px;
+  color: var(--muted);
+}
+
+.start-lead {
+  margin: 12px 0 20px;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* EN | ES */
+.start-lang {
+  display: flex;
+  flex: none;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+
+.start-lang-option {
+  padding: 4px 11px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+
+.start-lang-option.on {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+}
+
+/* The entries. */
+.start-entries {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.start-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.start-entry:hover,
+.start-entry:focus-visible {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-soft);
+  outline: none;
+}
+
+.start-entry-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.start-entry-meta {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.start-entry-sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.start-entry-who {
+  margin-top: 4px;
+  align-self: flex-start;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* The story is the way in: the first, wide and in the accent colour. */
+.start-entry-tour {
+  grid-column: 1 / -1;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.start-entry-tour .start-entry-title::before {
+  content: '▶';
+  font-size: 13px;
+}
+
+.start-entry-tour .start-entry-sub {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.start-entry-tour .start-entry-who {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.start-entry-tour:hover,
+.start-entry-tour:focus-visible {
+  border-color: #fff;
+}
+
+.start-entry-live {
+  border-color: var(--live);
+}
+
+.start-none {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* Drop a file (only when no village plays behind). */
+.start-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 14px;
+  padding: 18px;
+  border: 2px dashed var(--line);
+  border-radius: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  text-align: center;
+}
+
+.start-drop:hover,
+#start.drop .start-drop {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.start-drop-title {
+  font-weight: 800;
+}
+
+.start-drop-sub {
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.start-drop input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Who decides the village behind. */
+.start-note {
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.start-note:empty {
+  display: none;
+}
+
+/* Loading: one bar per part; a total of 0 is an indeterminate bar. */
+.start-progress {
+  margin-top: 14px;
+}
+
+.start-progress-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.start-progress-figure {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.start-progress-track {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+/* No transition on the width: from the indeterminate 35 % a frozen or slow
+   transition left the bar at a third under «100 %» (phase 9-5). */
+.start-progress-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.start-progress.indeterminate .start-progress-bar {
+  width: 35%;
+  animation: start-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes start-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(290%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .start-progress.indeterminate .start-progress-bar {
+    width: 100%;
+    opacity: 0.4;
+    animation: none;
+  }
+}
+
+/* Error: the message big, the detail small. */
+.start-error-message {
+  margin: 14px 0 8px;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.start-error-detail {
+  margin: 0 0 18px;
+  font: 12px/1.4 var(--mono);
+  color: var(--faint);
+  overflow-wrap: anywhere;
+}
+
+.start-back {
+  display: inline-block;
+  border: 0;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.start-back:focus-visible {
+  outline: 3px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .start-page {
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .start-home {
+    background: linear-gradient(rgba(244, 245, 241, 0.6), rgba(244, 245, 241, 0.1));
+  }
+
+  .start-card {
+    padding: 20px 18px;
+  }
+
+  .start-title {
+    font-size: 32px;
+  }
+
+  .start-entries {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Seen only when the modules do not start (index.html #nojs). */
+.nojs {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px;
+  background: #f4f5f1;
+  color: #1e2a36;
+  font: 16px/1.5 system-ui, sans-serif;
+  text-align: center;
+}
+
+.nojs code {
+  font-family: ui-monospace, monospace;
+}

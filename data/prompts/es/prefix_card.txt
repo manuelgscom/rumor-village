@@ -1,0 +1,2 @@
+Lugares: {places}.
+Vecinos: {neighbors}.

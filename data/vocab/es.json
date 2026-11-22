@@ -1,0 +1,69 @@
+{
+  "places": {
+    "square": "plaza",
+    "bar": "bar",
+    "church": "iglesia",
+    "market": "mercado",
+    "bakery": "panadería",
+    "school": "escuela",
+    "town_hall": "ayuntamiento",
+    "pharmacy": "farmacia",
+    "fountain": "fuente",
+    "mill": "molino",
+    "chapel": "ermita",
+    "river": "río",
+    "upper_quarter": "barrio alto",
+    "lower_quarter": "barrio bajo",
+    "east_quarter": "barrio este",
+    "west_quarter": "barrio oeste"
+  },
+  "jobs": {
+    "baker": ["panadera", "panadero"],
+    "bartender": ["tabernera", "tabernero"],
+    "teacher": ["maestra", "maestro"],
+    "priest": ["cura", "cura"],
+    "pharmacist": ["farmacéutica", "farmacéutico"],
+    "clerk": ["funcionaria", "funcionario"],
+    "merchant": ["tendera", "tendero"],
+    "miller": ["molinera", "molinero"],
+    "farmer": ["agricultora", "agricultor"],
+    "carpenter": ["carpintera", "carpintero"],
+    "seamstress": ["costurera", "costurero"],
+    "retired": ["jubilada", "jubilado"]
+  },
+  "traits": {
+    "gossip": ["cotilla", "cotilla"],
+    "sociable": ["sociable", "sociable"],
+    "prudent": ["prudente", "prudente"],
+    "discreet": ["discreta", "discreto"],
+    "shy": ["tímida", "tímido"],
+    "exaggerator": ["exagerada", "exagerado"]
+  },
+  "relations": {
+    "family": ["pariente", "pariente"],
+    "friend": ["amiga", "amigo"],
+    "coworker": ["compañera de trabajo", "compañero de trabajo"],
+    "acquaintance": ["vecina", "vecino"],
+    "rival": ["rival", "rival"]
+  },
+  "today": "hoy",
+  "tomorrow": "mañana",
+  "what": {
+    "party": "fiesta",
+    "lottery": "premio de lotería",
+    "wedding": "boda",
+    "concert": "concierto",
+    "works": "obra",
+    "inheritance": "herencia",
+    "fine": "multa"
+  },
+  "amount_units": {
+    "party": "personas",
+    "lottery": "euros",
+    "wedding": "invitados",
+    "concert": "personas",
+    "works": "días",
+    "inheritance": "euros",
+    "fine": "euros"
+  }
+}

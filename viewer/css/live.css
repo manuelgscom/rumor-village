@@ -1,0 +1,373 @@
+/* Package E: live mode and text input (viewer/js/live/). Uses the variables of core.css.
+
+   #input, right of the bottom bar, one line:   ● conectado  ( 💬 Escribe un rumor… ) [Enviar]
+   .live-pop floats above the bar, right-aligned, when open:
+
+   ┌ Un rumor nuevo ─────────────────────────── × ┐
+   │ (fields, only without extractor)             │
+   │ A quién   los que estén en [plaza ▾]         │
+   │ ✓ Entendido: (fiesta) · (plaza) · (hoy 21:00)│
+   │ Sin dato: quién            [Soltar el rumor] │
+   └────────────────────────────────────────── ▾ ─┘ */
+
+#input.live-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.live-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-status::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c-unknown);
+}
+
+.live-status[data-state='connected']::before {
+  background: var(--c-correct);
+  box-shadow: 0 0 0 3px rgba(31, 138, 112, 0.2);
+}
+
+.live-status[data-state='reconnecting']::before,
+.live-status[data-state='connecting']::before {
+  background: #e0a800;
+}
+
+.live-status[data-state='warn'] {
+  color: var(--c-wrong);
+}
+
+.live-status[data-state='warn']::before {
+  background: var(--c-wrong);
+}
+
+.live-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.live-input input,
+.live-input select,
+.live-input button {
+  font: inherit;
+  color: var(--text);
+}
+
+.live-input input,
+.live-input select {
+  height: 34px;
+  padding: 0 10px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.live-input input:focus,
+.live-input select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* The main input: a pill with a speech bubble. */
+.live-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.live-icon {
+  position: absolute;
+  left: 14px;
+  width: 17px;
+  height: 17px;
+  fill: var(--accent);
+  pointer-events: none;
+}
+
+.live-input .live-main {
+  width: 320px;
+  height: 44px;
+  padding: 0 16px 0 40px;
+  border-radius: 999px;
+  border-width: 2px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.live-main::placeholder {
+  color: var(--faint);
+  font-weight: 600;
+}
+
+.live-input .live-main:disabled {
+  background: var(--surface-2);
+}
+
+.live-input button {
+  height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(58, 111, 216, 0.35);
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.live-input button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(58, 111, 216, 0.45);
+}
+
+.live-input button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.live-input button:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+  cursor: default;
+}
+
+/* The floating panel. */
+.live-pop {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 22px);
+  z-index: 20;
+  width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.live-pop::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 260px;
+  border: 9px solid transparent;
+  border-top-color: var(--glass-strong);
+}
+
+.live-pop[hidden],
+.live-pop [hidden] {
+  display: none;
+}
+
+.live-pop-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 26px;
+}
+
+.live-pop-head strong {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.live-pop-hint {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.live-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.live-row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.live-row > span:first-child {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.live-row input,
+.live-row select {
+  width: 100%;
+}
+
+.live-pair {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.live-pair > select {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.live-pair small {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* «Entendido: fiesta · plaza · hoy 21:00», the heart of the panel. */
+.live-understood {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 4px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(31, 138, 112, 0.1);
+  border: 1.5px solid rgba(31, 138, 112, 0.35);
+  font-size: 17px;
+  font-weight: 800;
+  white-space: pre-wrap;
+}
+
+.live-u-label {
+  color: var(--c-correct);
+  margin-right: 4px;
+}
+
+.live-u-label::before {
+  content: '✓ ';
+}
+
+.live-chip {
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  color: var(--text);
+}
+
+.live-u-sep {
+  color: var(--faint);
+  font-weight: 700;
+}
+
+.live-understood:empty,
+.live-notes:empty,
+.live-error:empty,
+.live-done:empty,
+.live-pop-hint:empty {
+  display: none;
+}
+
+.live-notes {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.live-error {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(209, 73, 91, 0.1);
+  color: var(--c-wrong);
+  font-weight: 700;
+}
+
+.live-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.live-done {
+  margin-right: auto;
+  color: var(--c-correct);
+  font-weight: 800;
+}
+
+.live-input .live-drop {
+  background: var(--live);
+  box-shadow: 0 4px 12px rgba(224, 65, 58, 0.4);
+}
+
+.live-input .live-drop:hover:not(:disabled) {
+  box-shadow: 0 6px 16px rgba(224, 65, 58, 0.5);
+}
+
+.live-input .live-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted);
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.live-input .live-close:hover:not(:disabled) {
+  background: var(--accent-soft);
+  box-shadow: none;
+  transform: none;
+}
+
+.live-to-note {
+  color: var(--c-wrong);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.live-to-note:empty {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .live-input .live-main {
+    width: 220px;
+  }
+
+  .live-status {
+    display: none;
+  }
+}
+
+/* Once ended, the replay bar already says so. */
+.live-status[data-state='ended'] {
+  display: none;
+}

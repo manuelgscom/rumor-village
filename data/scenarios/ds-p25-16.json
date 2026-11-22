@@ -1,0 +1,41 @@
+{
+  "name": "ds-p25-16",
+  "layout": "village",
+  "neighbors": 25,
+  "start": {
+    "day": 0,
+    "time": "07:00"
+  },
+  "end": {
+    "day": 1,
+    "time": "00:00"
+  },
+  "start_weekday": 1,
+  "forget_ppm": 900,
+  "doubt_drop_ppm": 2000,
+  "max_turns": 8,
+  "meet_ppm": 50000,
+  "pair_cooldown": 120,
+  "rest_ticks": 5,
+  "stay_ticks": 90,
+  "hop_gap": 0,
+  "hop_retries": 0,
+  "injections": [
+    {
+      "at": {
+        "day": 0,
+        "time": "10:30"
+      },
+      "what": "lottery",
+      "text": null,
+      "who": "n012",
+      "where": "chapel",
+      "when": null,
+      "amount": 160000,
+      "to": [
+        "n007",
+        "n019"
+      ]
+    }
+  ]
+}

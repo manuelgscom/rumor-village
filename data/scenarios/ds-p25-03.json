@@ -1,0 +1,59 @@
+{
+  "name": "ds-p25-03",
+  "layout": "village",
+  "neighbors": 25,
+  "start": {
+    "day": 0,
+    "time": "07:00"
+  },
+  "end": {
+    "day": 1,
+    "time": "00:00"
+  },
+  "start_weekday": 1,
+  "forget_ppm": 900,
+  "doubt_drop_ppm": 2000,
+  "max_turns": 8,
+  "meet_ppm": 50000,
+  "pair_cooldown": 120,
+  "rest_ticks": 5,
+  "stay_ticks": 90,
+  "hop_gap": 0,
+  "hop_retries": 0,
+  "injections": [
+    {
+      "at": {
+        "day": 0,
+        "time": "11:00"
+      },
+      "what": "wedding",
+      "text": null,
+      "who": "n021",
+      "where": "pharmacy",
+      "when": {
+        "day": 0,
+        "time": "22:00"
+      },
+      "amount": 200,
+      "to": [
+        "n017",
+        "n018"
+      ]
+    },
+    {
+      "at": {
+        "day": 0,
+        "time": "13:30"
+      },
+      "what": "fine",
+      "text": null,
+      "who": "n014",
+      "where": null,
+      "when": null,
+      "amount": 2400,
+      "to": [
+        "n012"
+      ]
+    }
+  ]
+}

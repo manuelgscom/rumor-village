@@ -1,0 +1,20 @@
+{
+  "format": 1,
+  "id": "tell-the-priest",
+  "order": 6,
+  "title": { "es": "Que se entere el cura", "en": "Tell the priest" },
+  "intro": {
+    "es": "Que el cura se entere de tu rumor antes de las 14:00 sin que se lo cuentes tú (decirlo en un lugar donde está él también cuenta como contárselo, y entonces no hay estrellas). Tú eliges el rumor, a quién se lo cuentas y cuándo; cuanto antes se entere, más estrellas.",
+    "en": "Get the priest to hear about your rumor before 14:00 without you telling him (saying it at a place where he is also counts as telling him, and then there are no stars). You choose the rumor, who you tell and when; the sooner he hears about it, the more stars."
+  },
+  "settings": { "type": "village", "neighbors": 25, "town": 771, "trait_mix": 0, "distortion": "normal", "until": "14:00" },
+  "rumor": { "fact": { "what": null, "who": null, "where": null, "when": null, "amount": null } },
+  "open": ["what", "who", "where", "when", "amount", "to", "at", "mode"],
+  "max_to": 3,
+  "to_place": true,
+  "measure": "subject_tick",
+  "zero_if": "told_directly",
+  "subject": "priest",
+  "deadline": "14:00",
+  "stars": { "ai": [0,  90,  160], "rules": [0,  120,  175] }
+}

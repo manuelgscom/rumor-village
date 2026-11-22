@@ -1,0 +1,6 @@
+{"text":"there is a party in the square tonight at 9","answer":{"what":"party","who":null,"where":"square","when":"today 21:00","amount":null}}
+{"text":"Luis has won three thousand euros in the lottery","answer":{"what":"lottery prize","who":"Luis","where":null,"when":null,"amount":3000}}
+{"text":"Elena gets married tomorrow at the church at half past eleven in the morning","answer":{"what":"wedding","who":"Elena","where":"church","when":"tomorrow 11:30","amount":null}}
+{"text":"Pedro has been fined 200 euros","answer":{"what":"fine","who":"Pedro","where":null,"when":null,"amount":200}}
+{"text":"tomorrow at 8 pm there is a concert at the sports hall for 50 people","answer":{"what":"concert","who":null,"where":"sports hall","when":"tomorrow 20:00","amount":50}}
+{"text":"they say there are building works at the fountain","answer":{"what":"building works","who":null,"where":"fountain","when":null,"amount":null}}

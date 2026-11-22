@@ -1,0 +1,20 @@
+{
+  "format": 1,
+  "id": "surprise-party",
+  "order": 5,
+  "title": { "es": "Fiesta sorpresa", "en": "Surprise party" },
+  "intro": {
+    "es": "Que acudan muchos a la fiesta de Manuel sin que él se entere (los vecinos no saben que es sorpresa). Tú eliges dónde y cuándo es, a quién se lo cuentas y cuándo; cada estrella pide más vecinos al sitio y a la hora, y si Manuel se entera no hay ninguna.",
+    "en": "Get many to come to Manuel's party without him hearing about it (the neighbors do not know it is a surprise). You choose where and when it is, who you tell and when; each star asks for more neighbors at the right place and time, and if Manuel hears about it there are none."
+  },
+  "settings": { "type": "village", "neighbors": 25, "town": 312, "trait_mix": 0, "distortion": "normal" },
+  "rumor": { "fact": { "what": "party", "who": "n006", "where": null, "when": null, "amount": null } },
+  "open": ["where", "when", "to", "at", "mode"],
+  "max_to": 3,
+  "to_place": true,
+  "measure": "attend_ok",
+  "zero_if": "subject_informed",
+  "subject": "who",
+  "deadline": null,
+  "stars": { "ai": [2,  4,  6], "rules": [3,  7,  11] }
+}

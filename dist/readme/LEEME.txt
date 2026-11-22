@@ -1,0 +1,42 @@
+RUMOR VILLAGE
+=============
+
+Un juego de rumores: sueltas un rumor en un pueblo de vecinos y miras cómo
+corre de boca en boca. Se juega en el navegador, en tu ordenador y sin cuentas.
+
+ABRIRLO
+- Windows: doble clic en rumor-village.exe. Si sale «Windows protegió su PC»,
+  pulsa «Más información» y luego «Ejecutar de todas formas» (el programa no
+  está firmado). La ventana negra que se abre es el juego: si la cierras, el
+  juego se cierra.
+- Linux: el juego es el fichero .AppImage. Dale permiso para ejecutarse
+  (Propiedades > «Permitir ejecutar como un programa», o chmod +x) y haz doble
+  clic. Se abre una terminal, que es el juego: si la cierras, el juego se
+  cierra. Si no se abre, en una terminal:  ./rumor-village-linux-*.AppImage
+  Sin FUSE:  ./rumor-village-linux-*.AppImage --appimage-extract-and-run
+Se abre el navegador con el juego. Para salir: «Cerrar el juego» en el menú.
+
+LA PRIMERA VEZ
+El juego se abre al momento. Si tu tarjeta gráfica puede mover la IA, la IA del
+juego (5,34 GB) se descarga dentro del juego mientras juegas Sin IA; el menú
+enseña el progreso y, al terminar, pulsa «Activar Con IA». Si la descarga se
+corta, sigue donde iba.
+
+CON IA Y SIN IA
+- Con IA: una IA decide qué hace cada vecino. Hace falta una tarjeta gráfica.
+- Sin IA: deciden unas reglas fijas. Funciona en cualquier ordenador.
+Si la IA no puede funcionar, el juego arranca Sin IA y la ventana dice por qué.
+
+TUS DATOS (el modelo, tus partidas y tu progreso)
+- Windows: %LOCALAPPDATA%\RumorVillage\
+- Linux:   ~/.local/share/rumor-village/  (o $XDG_DATA_HOME/rumor-village/)
+Para actualizar, usa la versión nueva (el .zip descomprimido o el .AppImage):
+tus datos siguen ahí.
+
+DESINSTALAR
+Borra esta carpeta (en Linux, el .AppImage) y la carpeta de tus datos.
+
+Guía completa (en inglés):
+https://github.com/manuelgscom/rumor-village/blob/main/docs/guia-jugador.en.md
+
+Licencia: LICENSE (MIT). Avisos de terceros: THIRD_PARTY_NOTICES.txt y licenses/.

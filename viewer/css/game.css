@@ -1,0 +1,1669 @@
+/* Package C of phase 9: the game mode (viewer/js/game/). Uses the variables of core.css.
+
+   #game covers the window, over the interface and under #start (z-index 40),
+   only while <html> has data-game ("play" with ?play=1, "replay" with ?game=).
+   The zone lets clicks through to the village; its screens take them. At the
+   end (<html data-game-phase="ended">) it rises over the 8-2 card (.sm-final,
+   z-index 40) so the game card sits beside it.
+
+   ┌ #game ─────────────────────────────────────────────┐
+   │ .gm-root                                           │
+   │ ┌ .gm-prepare ┐                    ┌ .gm-end ┐     │
+   │ │ (left)      │   ┌ boot, menu… ┐  │ (right) │     │
+   │ │             │   └─(centred)───┘  │         │     │
+   │ └─────────────┘   ┌ .gm-bar ┐      └─────────┘     │
+   │                   └─────────┘ (over the timeline)  │
+   └────────────────────────────────────────────────────┘ */
+
+#game {
+  display: none;
+}
+
+:root[data-game] #game {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  font-family: var(--font);
+  color: var(--text);
+}
+
+:root[data-game-phase='ended'] #game {
+  z-index: 41;
+}
+
+.gm-root {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gm-root > * {
+  pointer-events: auto;
+}
+
+.gm-root [hidden] {
+  display: none !important;
+}
+
+/* Centred screens (boot, menu, challenges, friend, games) dim the village a little. */
+.gm-root.gm-modal {
+  display: grid;
+  place-items: center;
+  padding: var(--edge);
+  pointer-events: auto;
+  background: rgba(14, 22, 36, 0.28);
+}
+
+/* --- Cards ------------------------------------------------------------------- */
+
+.gm-screen,
+.gm-end,
+.gm-bar {
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.gm-screen {
+  width: min(640px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: 20px 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gm-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.gm-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gm-body p,
+.gm-section p {
+  margin: 0;
+}
+
+.gm-foot,
+.gm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.gm-lead {
+  font-size: 1.05rem;
+}
+
+.gm-team {
+  font-weight: 700;
+}
+
+.gm-team[data-check='running']::after {
+  content: '';
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-left: 0.5em;
+  border: 2px solid var(--accent);
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -0.1em;
+  animation: gm-spin 0.9s linear infinite;
+}
+
+@keyframes gm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.gm-hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.gm-advice,
+.gm-friend {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+}
+
+.gm-offer {
+  font-weight: 700;
+}
+
+.gm-error {
+  color: var(--c-wrong);
+  font-size: 0.9rem;
+}
+
+.gm-ok {
+  color: var(--c-correct);
+  font-weight: 700;
+}
+
+/* --- Buttons and controls -------------------------------------------------------- */
+
+.gm-btn,
+.gm-seg button {
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.gm-btn:hover:not(:disabled),
+.gm-seg button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.gm-btn:disabled,
+.gm-seg button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.gm-btn:focus-visible,
+.gm-seg button:focus-visible,
+.gm-entry:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.gm-primary {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.gm-quiet {
+  color: var(--muted);
+  background: transparent;
+}
+
+.gm-icon {
+  padding: 5px 10px;
+}
+
+.gm-seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.gm-seg button {
+  padding: 5px 11px;
+  font-weight: 600;
+}
+
+.gm-seg button.on {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.gm-root select,
+.gm-root input[type='number'],
+.gm-root textarea,
+.gm-root input.gm-code {
+  font: inherit;
+  font-size: 0.92rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  max-width: 100%;
+}
+
+.gm-root textarea,
+.gm-root input.gm-code {
+  width: 100%;
+  resize: vertical;
+}
+
+.gm-town,
+.gm-amount {
+  width: 7em;
+}
+
+.gm-pair {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.gm-range input {
+  width: 9em;
+}
+
+.gm-range-label {
+  /* Room for the longest level («casi todos cotillas») so the row does not jump. */
+  min-width: 10.5em;
+  font-weight: 700;
+}
+
+/* --- Boot: the two modes ----------------------------------------------------------- */
+
+.gm-modes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.gm-modes th,
+.gm-modes td {
+  text-align: left;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.gm-modes thead th {
+  font-weight: 800;
+}
+
+.gm-modes .on {
+  background: var(--accent-soft);
+}
+
+/* --- Menu and lists ----------------------------------------------------------------- */
+
+.gm-entries {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gm-entry {
+  font: inherit;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+}
+
+.gm-entry strong {
+  font-size: 1.08rem;
+}
+
+.gm-entry span {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.gm-entry:hover {
+  border-color: var(--accent);
+}
+
+.gm-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gm-challenge,
+.gm-game {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.gm-ch-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.gm-ch-stars {
+  font-size: 0.88rem;
+}
+
+.gm-stars {
+  color: var(--warm);
+  letter-spacing: 0.08em;
+}
+
+.gm-big {
+  font-size: 2rem;
+}
+
+/* --- Prepare --------------------------------------------------------------------------- */
+
+.gm-root[data-screen='prepare'] .gm-prepare {
+  position: absolute;
+  top: var(--edge);
+  bottom: var(--edge);
+  left: var(--edge);
+  width: min(460px, calc(100% - 2 * var(--edge)));
+  max-height: none;
+  padding: 16px 16px 12px;
+}
+
+.gm-prepare .gm-body {
+  flex: 1;
+  overflow: auto;
+  gap: 14px;
+  padding-right: 4px;
+}
+
+.gm-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gm-section h3,
+.gm-section h4 {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.gm-field {
+  display: grid;
+  grid-template-columns: 9.5em 1fr;
+  gap: 4px 10px;
+  align-items: center;
+}
+
+.gm-field > .gm-hint {
+  grid-column: 2;
+}
+
+.gm-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.gm-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+}
+
+.gm-locked .gm-label {
+  color: var(--muted);
+}
+
+.gm-lock {
+  margin-left: 6px;
+  padding: 0 6px;
+  font-size: 0.72em;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  vertical-align: 0.1em;
+}
+
+.gm-ch-title {
+  font-weight: 800;
+}
+
+.gm-rumor-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gm-rumor {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.gm-rumor.on {
+  border-color: var(--accent);
+}
+
+.gm-rumor.gm-incomplete {
+  border-style: dashed;
+}
+
+.gm-rumor-n {
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.gm-rumor-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.gm-rumor-actions .gm-btn {
+  padding: 3px 10px;
+  font-size: 0.82rem;
+}
+
+.gm-editor:empty {
+  display: none;
+}
+
+.gm-editor {
+  padding: 10px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+
+.gm-free-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.gm-understood {
+  font-weight: 700;
+  color: var(--c-correct);
+}
+
+.gm-checks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5em, 1fr));
+  gap: 2px 8px;
+  width: 100%;
+  max-height: 11em;
+  overflow: auto;
+}
+
+.gm-check {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.88rem;
+}
+
+.gm-bet summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.gm-bet[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gm-race {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+}
+
+.gm-prepare-foot {
+  flex-direction: column;
+  align-items: stretch;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.gm-why {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gm-start {
+  font-size: 1.05rem;
+  padding: 9px 22px;
+}
+
+/* Phase 9-2: the mode label, the live summary, «Opcional», errors by field,
+   the example, the neighbor filter and «Personalizar el pueblo». */
+.gm-prepare .gm-title {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.gm-prep-mode {
+  padding: 1px 9px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+}
+
+.gm-opt {
+  margin-left: 6px;
+  font-size: 0.75em;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.gm-field-error {
+  grid-column: 2;
+}
+
+.gm-invalid .gm-label {
+  color: var(--c-wrong);
+}
+
+.gm-summary {
+  margin: 0;
+  padding: 8px 10px;
+  font-weight: 700;
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+}
+
+.gm-example {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.gm-wide {
+  flex-basis: 100%;
+}
+
+.gm-chosen {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.gm-root input.gm-filter {
+  width: 100%;
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 0.88rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.gm-custom summary,
+.gm-modes-box summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.gm-custom[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* «Repetir un pueblo»: the town number, folded inside «Personalizar el pueblo». */
+.gm-custom .gm-repeat summary {
+  font-weight: 600;
+}
+
+.gm-repeat[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gm-modes-box[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gm-goal {
+  font-weight: 800;
+}
+
+/* Phase 9-4: «Rumor listo», «Personalizar la partida», the editor in two
+   groups, job and trait beside each name, a search with no match, and the
+   head of a challenge. */
+.gm-ready {
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+
+.gm-ready:empty {
+  display: none;
+}
+
+.gm-ready p {
+  margin: 0;
+}
+
+.gm-ready-news {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.gm-ready-tell {
+  font-weight: 700;
+}
+
+.gm-ready-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 4px;
+}
+
+.gm-customize summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.gm-customize[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gm-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gm-group + .gm-group {
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.gm-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gm-who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.gm-role {
+  font-size: 0.74rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gm-checks {
+  grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
+  gap: 4px 8px;
+}
+
+.gm-nomatch {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.gm-nomatch[hidden] {
+  display: none;
+}
+
+.gm-nomatch .gm-btn {
+  padding: 3px 10px;
+  font-size: 0.82rem;
+}
+
+.gm-star-goal {
+  font-weight: 700;
+}
+
+.gm-your-part {
+  padding: 6px 10px;
+  font-weight: 800;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+}
+
+.gm-last-try {
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .gm-field > .gm-field-error {
+    grid-column: 1;
+  }
+
+  .gm-start {
+    flex: 1 1 100%;
+  }
+}
+
+/* --- Bar (playing, replay)------------------------------------------------------------ */
+
+/* Above the bottom bar, in the middle: the top centre is the clock line (#now). */
+/* Under the «Ahora» banner: the bottom right corner belongs to the view
+   switch and the director button. */
+.gm-bar {
+  position: absolute;
+  top: 128px;
+  /* Centred without transform: the card-in animation sets its own. */
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: fit-content;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 8px 6px 10px;
+  border-radius: 999px;
+  max-width: calc(100% - 2 * var(--edge));
+}
+
+.gm-bar-title {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gm-mode {
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--accent);
+  white-space: nowrap;
+}
+
+.gm-mode-rules {
+  background: var(--muted);
+}
+
+.gm-stop,
+.gm-stop-yes {
+  color: #fff;
+  background: var(--live);
+  border-color: var(--live);
+}
+
+/* «Terminar ya» asks in the bar: the question, the race left undecided, two buttons. */
+.gm-bar-ask {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+.gm-bar-race {
+  font-weight: 700;
+  color: var(--live);
+}
+
+.gm-bar-warn {
+  font-size: 0.85rem;
+}
+
+/* --- Game card (end) ---------------------------------------------------------------------- */
+
+.gm-end {
+  position: absolute;
+  top: var(--edge);
+  bottom: var(--edge);
+  right: var(--edge);
+  width: min(420px, calc(100% - 2 * var(--edge)));
+  overflow: auto;
+  padding: 18px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gm-end-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.gm-kicker {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.gm-score {
+  font-weight: 800;
+}
+
+/* What is missing for the next star; a race cut by «Terminar ya». */
+.gm-next,
+.gm-race-cut {
+  font-weight: 700;
+}
+
+.gm-lines {
+  margin: 0;
+  padding-left: 1.1em;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.gm-points {
+  color: var(--accent);
+}
+
+.gm-chain {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gm-honest {
+  font-weight: 800;
+  color: var(--c-correct);
+}
+
+.gm-hops {
+  margin: 0;
+  padding-left: 1.3em;
+  font-size: 0.88rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gm-hop.gm-changed {
+  font-weight: 800;
+  color: var(--c-wrong);
+}
+
+.gm-end-actions {
+  justify-content: stretch;
+}
+
+.gm-end-actions > * {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.gm-end-pill {
+  position: absolute;
+  right: var(--edge);
+  bottom: calc(var(--edge) + 64px);
+  box-shadow: var(--shadow);
+}
+
+/* --- Narrow screens -------------------------------------------------------------------------- */
+
+@media (max-width: 700px) {
+  .gm-entries {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-field {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-field > .gm-hint {
+    grid-column: 1;
+  }
+
+  .gm-root[data-screen='prepare'] .gm-prepare {
+    top: 8px;
+    bottom: 8px;
+    left: 8px;
+    width: calc(100% - 16px);
+  }
+
+  .gm-end {
+    top: 8px;
+    bottom: 8px;
+    right: 8px;
+    width: calc(100% - 16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-team[data-check='running']::after {
+    animation: none;
+  }
+}
+
+/* The two colours of a race (rumor/race.js RACE_COLORS), in the game bar. */
+.gm-race-legend {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.gm-race-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.gm-race-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* At the end, the day card of 8-2 (summary.css .sm-final) leaves the right
+   column to the game card instead of sliding under it. */
+@media (min-width: 1100px) {
+  :root[data-game]:has(.gm-end:not([hidden])) .sm-final {
+    padding-right: calc(min(420px, 100%) + 2 * var(--edge));
+  }
+}
+
+/* The summary sentence sits between the scrolling body and the footer (phase 9-2). */
+.gm-prepare > .gm-summary {
+  flex-shrink: 0;
+}
+
+/* --- phase 9-4, package B --- */
+
+/* Boot: the tutorial on offer before the computer's diagnosis. */
+.gm-invite {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+}
+
+.gm-modes-box summary .gm-mode {
+  margin-left: 6px;
+  vertical-align: 0.05em;
+}
+
+/* Menu: «Cerrar el juego» not confirmed; «Mis partidas» not loaded. */
+.gm-quit-failed,
+.gm-games-failed {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Bar: the title with the goal and the wait of the first rumor under it. */
+.gm-bar:has(.gm-bar-head) {
+  border-radius: 18px;
+}
+
+.gm-bar-head {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.gm-bar-goal,
+.gm-bar-status {
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gm-bar-status {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* End card: one main action, the rest folded. */
+.gm-end-retry {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gm-end-retry > .gm-btn {
+  width: 100%;
+}
+
+.gm-keeps {
+  margin: 0;
+}
+
+.gm-end-more {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.gm-end-more summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.gm-end-more[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gm-end-day {
+  justify-content: flex-start;
+}
+
+@media (max-width: 700px) {
+  .gm-bar:has(.gm-bar-head) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .gm-bar-head {
+    flex: 1 1 60%;
+  }
+
+  .gm-bar-goal,
+  .gm-bar-status {
+    white-space: normal;
+  }
+}
+
+/* --- 9-5 package A (menu, prepare, screens): new rules only here --- */
+/* Menu: the card of the mode, «Tutorial» first and wide, «Cerrar» asks first. */
+.gm-mode-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.gm-mode-card-ai {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.gm-mode-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.gm-mode-card-text span {
+  font-size: 0.9rem;
+}
+
+.gm-pc {
+  color: var(--muted);
+}
+
+.gm-entry.gm-entry-main {
+  width: 100%;
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.gm-entry.gm-entry-main strong {
+  font-size: 1.25rem;
+}
+
+.gm-entry.gm-entry-main span {
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.gm-quit-ask {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+/* «Con IA y Sin IA»: the two columns, a real talk beside the same moment Sin IA. */
+.gm-mode-cols,
+.gm-show {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 10px;
+}
+
+.gm-mode-col,
+.gm-show-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.gm-mode-col-ai {
+  border-color: var(--accent);
+}
+
+.gm-mode-col[data-on='true'] {
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.gm-mode-col h3,
+.gm-show-col h4,
+.gm-show-think h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.gm-badge {
+  padding: 1px 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  vertical-align: 0.1em;
+}
+
+.gm-pros {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: 0.9rem;
+}
+
+.gm-bubble {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.gm-show-rules .gm-bubble {
+  font-family: var(--mono, monospace);
+}
+
+.gm-show-think summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.gm-show-think[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gm-think-read {
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+
+/* Retos: the current mode marked, the one not available dimmed. */
+.gm-star-mode.on {
+  font-weight: 800;
+}
+
+.gm-star-mode.off {
+  opacity: 0.45;
+}
+
+.gm-ch-need {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Prepare: the head. */
+.gm-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gm-goal-line {
+  font-size: 0.92rem;
+}
+
+.gm-subject {
+  font-weight: 700;
+}
+
+/* Prepare: the rumor as a sentence with gaps. */
+.gm-sentence {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 2.1;
+}
+
+.gm-gap {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  border-radius: var(--radius-sm);
+}
+
+.gm-gap.gm-filled select,
+.gm-gap.gm-filled input {
+  border-color: var(--c-correct);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.gm-fixed {
+  padding: 1px 6px;
+  font-weight: 700;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+
+.gm-gap-x {
+  margin-left: 2px;
+  padding: 0 7px;
+  font-size: 0.85rem;
+}
+
+.gm-adds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gm-add {
+  padding: 3px 10px;
+  font-size: 0.82rem;
+  border-style: dashed;
+}
+
+.gm-types {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gm-types .gm-hint {
+  font-weight: 400;
+}
+
+.gm-write summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.gm-write[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* A field whose controls go under the label (whom, when). */
+.gm-stack > .gm-field {
+  grid-template-columns: 1fr;
+}
+
+.gm-stack > .gm-field > .gm-hint,
+.gm-stack > .gm-field > .gm-field-error {
+  grid-column: 1;
+}
+
+.gm-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+/* The cards of the neighbors. */
+.gm-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-height: 24em;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.gm-card {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 7px 9px;
+  font-size: 0.86rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.gm-card:hover,
+.gm-card:focus-within {
+  border-color: var(--accent);
+}
+
+.gm-card.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.gm-card input {
+  margin-top: 3px;
+}
+
+.gm-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.gm-card-body small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.gm-card-trait {
+  font-size: 0.82rem;
+}
+
+.gm-card-body .gm-card-now {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.gm-card:has(input:disabled:not(:checked)) {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.gm-ready-about {
+  font-size: 0.9rem;
+}
+
+/* «Más opciones»: each block apart (a <details> does not lay out its content as flex everywhere). */
+.gm-customize > .gm-section:not(:empty) {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.gm-customize .gm-race {
+  margin-top: 12px;
+}
+
+.gm-customize .gm-group + .gm-group,
+.gm-customize .gm-section > h3 + .gm-group {
+  margin-top: 10px;
+}
+
+/* The three signs of a card, and the proposal of «Rumor listo». */
+.gm-card-signs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 2px 0;
+}
+
+.gm-sign {
+  padding: 0 7px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+
+.gm-ready-propose {
+  font-size: 0.88rem;
+}
+
+.gm-ready-propose .gm-btn {
+  margin-left: 4px;
+  padding: 2px 10px;
+  font-size: 0.82rem;
+}
+
+/* The tutorial already done; the village of the last game. */
+.gm-entry.gm-entry-main .gm-done {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.gm-village-note {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.gm-village-note .gm-btn {
+  margin-left: 4px;
+  padding: 2px 10px;
+  font-size: 0.82rem;
+}
+
+/* The subject of a challenge, in their card: no stars if told or if they hear it. */
+.gm-card-body .gm-card-warn {
+  color: var(--c-wrong);
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .gm-mode-cols,
+  .gm-show {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-mode-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+/* --- end of 9-5 package A --- */
+
+/* --- 9-5 package C (end card): new rules only here --- */
+
+/* «Tu marca: 14 de 25 vecinos», the try before, the hint of «Repetir igual». */
+.gm-mark {
+  font-size: 1.05rem;
+}
+
+.gm-last-try,
+.gm-again-hint {
+  margin: 0;
+}
+
+/* «¿Quién fue?»: the rumor in full, then the chain. A hop that distorts is red;
+   one that only forgets is muted (forgetting is not distorting); the first
+   change, the culprit's, stands out with its tag. */
+.gm-who-rumor {
+  font-weight: 700;
+}
+
+.gm-hop-change {
+  display: block;
+  font-size: 0.84rem;
+}
+
+.gm-hop.gm-forgot {
+  color: var(--muted);
+}
+
+.gm-hop.gm-culprit {
+  margin-left: -6px;
+  padding: 2px 6px;
+  border-left: 3px solid var(--c-wrong);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--c-wrong) 14%, transparent);
+}
+
+.gm-first {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--surface);
+  background: var(--c-wrong);
+}
+
+/* «Más detalles»: a <details> does not lay its content out as flex in every
+   browser, so the gap of .gm-end-more[open] may not apply. Each block gets its
+   own space and a rule above its title. */
+.gm-end-more > .gm-section,
+.gm-end-more > .gm-end-day {
+  margin-top: 14px;
+}
+
+.gm-end-more > .gm-section + .gm-section {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+/* --- end of 9-5 package C --- */
+
+/* Phase 10: the version in the foot of the menu, and the download of the web version. */
+.gm-version {
+  align-self: center;
+  margin-left: auto;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+.gm-download {
+  display: inline-block;
+  margin-top: 0.4rem;
+  text-decoration: none;
+}
+
+/* Phase 10: the download of the AI in the downloaded game (game/aidownload.js),
+   in the card of the mode and in «Con IA y Sin IA». */
+.gm-dl {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-top: 4px;
+  min-width: 0;
+}
+.gm-dl-line {
+  font-weight: 600;
+}
+.gm-dl-bar {
+  width: 100%;
+  max-width: 360px;
+  height: 8px;
+  accent-color: var(--accent);
+}
+.gm-dl-folder {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+}
+.gm-dl-folder code {
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+.gm-dl-action {
+  margin-top: 4px;
+}
+.gm-mode-card > .gm-btn {
+  flex-shrink: 0;
+}
+
+/* Menu: the language beside the title and «Quién decide» on the card of the mode
+   (both remembered in the profile). */
+.gm-menu-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.gm-menu-head .gm-seg button {
+  padding: 3px 9px;
+  font-size: 0.85rem;
+}
+
+.gm-mode-pick {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}

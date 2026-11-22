@@ -1,0 +1,816 @@
+/* Package B of phase 6: summary card of the day (viewer/js/summary/). Uses the variables of core.css.
+
+   Phase 7: in the room between the two columns, above the bottom bar; the
+   card opens upwards from the pill.
+
+   ┌ .column-left ┐   ┌─ .sm-card ───── ✕ ┐   ┌ .column-right ┐
+   │              │   │ …                 │   │               │
+   │              │   └───────────────────┘   │               │
+   │              │ [Resumen del día]         │               │  .sm-pill
+   └──────────────┘                           └───────────────┘
+   └ .bar ───────────────────────────────────────────────────────┘ */
+
+/* The zone spans that room but lets clicks through to the map. */
+#summary.sm-zone {
+  position: absolute;
+  top: calc(var(--edge) + 48px + 2 * var(--gap) + 44px);
+  bottom: calc(var(--edge) + 72px + var(--gap));
+  left: calc(var(--column-left) + 2 * var(--edge));
+  right: calc(var(--column) + 2 * var(--edge));
+  z-index: 10;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.sm-zone > * {
+  pointer-events: auto;
+}
+
+.sm-zone button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.sm-zone .sm-pill {
+  /* At the left end: the right end has the floating buttons of package story. */
+  align-self: flex-start;
+  padding: 8px 18px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.sm-zone .sm-pill:hover,
+.sm-zone .sm-pill.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--surface);
+}
+
+.sm-card {
+  width: 440px;
+  max-width: 100%;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px 18px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.sm-card[hidden],
+.sm-card [hidden] {
+  display: none;
+}
+
+.sm-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.sm-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.sm-zone .sm-x {
+  margin-left: auto;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--muted);
+  padding: 0 2px;
+}
+
+.sm-zone .sm-x:hover {
+  color: var(--text);
+}
+
+.sm-fact {
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sm-told {
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.sm-told.sm-none {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* Stacked bar of versions over every neighbor. */
+.sm-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--c-unknown);
+}
+
+.sm-seg {
+  display: block;
+  height: 100%;
+  transition: width var(--dur) var(--ease);
+}
+
+.sm-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  font-size: 12.5px;
+}
+
+.sm-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.sm-key b {
+  font-variant-numeric: tabular-nums;
+}
+
+.sm-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.sm-changed {
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+  font-weight: 600;
+}
+
+.sm-subhead {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.sm-changes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm-zone .sm-change {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  width: 100%;
+  padding: 3px 4px;
+  border-radius: 4px;
+  text-align: left;
+}
+
+.sm-change .sm-swatch {
+  width: 8px;
+  height: 8px;
+  transform: translateY(-1px);
+}
+
+.sm-zone .sm-change:hover {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.sm-change::after {
+  content: '›';
+  margin-left: auto;
+  padding-left: 6px;
+  color: var(--muted);
+}
+
+.sm-dim {
+  color: var(--muted);
+}
+
+.sm-more {
+  padding-left: 18px;
+}
+
+/* Tabs of the card and the ranking of gossips (viewer/js/summary/ranking.js).
+
+   [Resumen] [Cotillas]
+   1 Carmen  ██████████  14 · 9
+   2 Luis    ██████       8 · 3  */
+.sm-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sm-zone .sm-tab {
+  padding: 3px 10px 4px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.sm-zone .sm-tab:hover {
+  color: var(--text);
+}
+
+.sm-zone .sm-tab.on {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.sm-view {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sm-ranks {
+  gap: 12px;
+}
+
+.sm-hint {
+  font-size: 11.5px;
+  margin-bottom: 2px;
+}
+
+.sm-rank-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm-zone .sm-rank {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 96px) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 3px 4px;
+  border-radius: 4px;
+  text-align: left;
+}
+
+.sm-zone .sm-rank:hover {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.sm-rank-pos {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.sm-rank-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sm-rank-track {
+  display: block;
+  height: 10px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--muted) 16%, transparent);
+  overflow: hidden;
+}
+
+.sm-rank-bar {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.2s;
+}
+
+.sm-rank-n {
+  min-width: 46px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Laptops (phase 8-1, 1.12): the card goes to the right, over the column,
+   and leaves the model free. Narrower, the columns are drawers (core.css)
+   and the card takes the middle again. */
+@media (max-width: 1440px) and (min-width: 1101px) {
+  #summary.sm-zone {
+    top: var(--edge);
+    left: auto;
+    right: var(--edge);
+    width: var(--column);
+    z-index: 21;
+  }
+
+  .sm-card {
+    width: 100%;
+  }
+}
+
+/* With the telephone strip (rumor.css, <html data-strip>) the pill and the
+   card sit above it. */
+:root[data-strip] #summary.sm-zone {
+  bottom: calc(var(--edge) + 72px + 2 * var(--gap) + var(--strip));
+}
+
+.sm-zone .sm-expand {
+  margin-left: auto;
+  font-size: 16px;
+}
+
+.sm-zone .sm-expand + .sm-x {
+  margin-left: 8px;
+}
+
+/* Faces of the gossips: the portrait (app.hooks.portrait) or the initials. */
+.sm-zone .sm-rank {
+  grid-template-columns: 14px 26px minmax(0, 96px) minmax(0, 1fr) auto;
+}
+
+.sm-face,
+.smf-face {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--v, var(--accent));
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px var(--v, var(--accent));
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.sm-face {
+  --v: color-mix(in srgb, var(--accent) 70%, #fff);
+  background: var(--surface-2);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.sm-face img,
+.smf-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Full-screen card at the end of the day (final.js, phase 8-2) ─────
+
+   .sm-final        the dimmed scene, over the whole layout
+   .smf-card        head · figures · bar · tree | gossips · actions */
+.sm-final {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: var(--edge);
+  background: rgba(14, 22, 36, 0.42);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.sm-final[hidden],
+.sm-final [hidden] {
+  display: none;
+}
+
+.smf-card {
+  position: relative;
+  width: min(1000px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 28px 22px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(10, 18, 32, 0.35), 0 2px 6px rgba(10, 18, 32, 0.18);
+  outline: none;
+}
+
+.smf-card button,
+.smf-card a {
+  font: inherit;
+  color: inherit;
+}
+
+.smf-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 12px;
+}
+
+.smf-kicker {
+  grid-column: 1;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.smf-run {
+  margin-left: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--muted);
+}
+
+.smf-titlebox {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 14px;
+  min-width: 0;
+}
+
+.smf-what {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.smf-fact {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.smf-x {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.smf-x:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.smf-figs {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.smf-fig[hidden] {
+  display: none;
+}
+
+/* Inside the game the summary is over the game screens (#game, z-index 41
+   once the game ended) and the guide card (phase 9-5). */
+:root[data-game] .sm-final {
+  z-index: 45;
+}
+
+.smf-fig {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  align-items: baseline;
+  gap: 0 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--c) 9%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--c) 22%, transparent);
+}
+
+.smf-n {
+  grid-row: 1 / span 2;
+  font-size: 58px;
+  line-height: 0.95;
+  font-weight: 900;
+  color: var(--c);
+  font-variant-numeric: tabular-nums;
+  min-width: 1ch;
+}
+
+.smf-label {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.smf-sub {
+  align-self: start;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.smf-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--c-unknown);
+}
+
+.smf-seg {
+  display: block;
+  height: 100%;
+}
+
+.smf-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 16px;
+  min-height: 0;
+}
+
+.smf-sec {
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--surface-2);
+}
+
+/* What the dots and the ◆ of the tree are (phase 9-5). */
+.smf-hint {
+  margin: -2px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.smf-h {
+  margin: 0 0 6px;
+  font-size: 11.5px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.smf-treesec {
+  display: flex;
+  flex-direction: column;
+}
+
+.smf-tree {
+  display: block;
+  width: 100%;
+  margin: auto 0;
+}
+
+.smf-people {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.smf-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 5px 6px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.smf-person:hover {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.smf-face {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+}
+
+.smf-face.light {
+  color: #4a3200;
+}
+
+.smf-distorter .smf-face {
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--c-wrong);
+}
+
+.smf-distorter:first-of-type,
+.smf-teller + .smf-distorter {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+}
+
+.smf-ptext {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.smf-pname {
+  font-weight: 900;
+}
+
+.smf-pline,
+.smf-psub {
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.smf-distorter .smf-pline {
+  color: var(--c-wrong);
+  font-weight: 700;
+}
+
+.smf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.smf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+.smf-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.smf-save {
+  margin-left: auto;
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.smf-card .smf-save {
+  color: #fff;
+}
+
+.smf-save:hover {
+  background: color-mix(in srgb, var(--accent) 85%, #000);
+  color: #fff;
+}
+
+/* Laptops: a little tighter so it fits 1366×768. */
+@media (max-height: 820px) {
+  .smf-card {
+    gap: 12px;
+    padding: 18px 22px 18px;
+  }
+
+  .smf-n {
+    font-size: 50px;
+  }
+}
+
+/* Phones: one column, smaller figures; it still fits 390×844. */
+@media (max-width: 700px) {
+  .sm-final {
+    padding: 10px;
+  }
+
+  .smf-card {
+    gap: 10px;
+    padding: 16px 14px 14px;
+    border-radius: 20px;
+  }
+
+  .smf-what {
+    font-size: 22px;
+  }
+
+  .smf-fact {
+    font-size: 14px;
+  }
+
+  .smf-figs {
+    gap: 6px;
+  }
+
+  .smf-fig {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    padding: 8px 10px;
+    border-radius: 12px;
+  }
+
+  .smf-n {
+    grid-row: auto;
+    font-size: 32px;
+  }
+
+  .smf-label {
+    font-size: 12px;
+  }
+
+  .smf-sub {
+    display: none;
+  }
+
+  .smf-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .smf-sec {
+    padding: 8px 10px;
+  }
+
+  .smf-face {
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
+  }
+
+  .smf-person {
+    padding: 3px 4px;
+  }
+
+  .smf-actions {
+    gap: 6px;
+  }
+
+  .smf-btn {
+    flex: 1 1 40%;
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 13.5px;
+  }
+
+  .smf-save {
+    margin-left: 0;
+  }
+}

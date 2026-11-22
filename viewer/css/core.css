@@ -1,0 +1,564 @@
+/* Core layout and design system of the viewer.
+
+   The 3D scene fills the window and the interface floats over it as glass
+   cards. Every package styles the inside of its own zone with these tokens.
+
+   ┌ #banner ─────────────────┐      #now       ┌ .column-right ─┐
+   ├ .column-left ┐                             │ #story         │
+   │ #rumor       │          #stage             │ #side          │
+   │              │   #map      WebGL scene     │ .dock          │
+   │              │   #overlay  2D layers       │  #panel #batch │
+   │              │   #labels   HTML labels     │                │
+   └──────────────┘                             └────────────────┘
+   └ .bar: #timeline ······························ #input ────────┘
+
+   Version colors (--c-correct, --c-incomplete, --c-wrong, --c-unknown) are
+   also written from js/core/theme.js, so the scene and the CSS agree. */
+
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: block;
+  src: url('../assets/fonts/nunito-latin-wght-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: block;
+  src: url('../assets/fonts/nunito-latin-ext-wght-normal.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
+    U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --c-correct: #1f8a70;
+  --c-incomplete: #e0a526;
+  --c-wrong: #d1495b;
+  --c-unknown: #9aa0a6;
+
+  /* Surfaces: frosted glass over the scene. */
+  --glass: rgba(255, 255, 255, 0.84);
+  --glass-strong: rgba(255, 255, 255, 0.94);
+  --glass-edge: rgba(255, 255, 255, 0.7);
+  --glass-blur: blur(16px) saturate(1.5);
+  --shadow: 0 10px 30px rgba(18, 28, 45, 0.18), 0 1px 3px rgba(18, 28, 45, 0.12);
+  --shadow-soft: 0 4px 14px rgba(18, 28, 45, 0.12);
+
+  --bg: #f4f5f1; /* kept for packages that still use it */
+  --surface: #ffffff;
+  --surface-2: #f3f5f8;
+  --line: rgba(30, 42, 54, 0.12);
+  --text: #1e2a36;
+  --muted: #5d6b78;
+  --faint: #66727e; /* 4.5:1 on white and on --surface-2 */
+  --accent: #3a6fd8;
+  --accent-soft: rgba(58, 111, 216, 0.12);
+  --warm: #ff8a3d;
+  --live: #e0413a;
+
+  --column: 360px;
+  --column-left: 300px;
+  --edge: 16px;
+  --gap: 12px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'DejaVu Sans Mono', ui-monospace, monospace;
+
+  /* Motion (phase 8-2, 2.14): one set of durations and curves for every package. */
+  --dur-fast: 0.15s;
+  --dur: 0.28s;
+  --dur-slow: 0.6s;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.5, 0, 0.75, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0s;
+    --dur: 0s;
+    --dur-slow: 0s;
+  }
+}
+
+/* Cards coming in and out: add .card-in or .card-out (phase 8-2, 2.14). */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes card-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+.card-in {
+  animation: card-in var(--dur) var(--ease-out) both;
+}
+
+.card-out {
+  animation: card-out var(--dur-fast) var(--ease-in) both;
+}
+
+/* SVG icons of js/core/icons.js: as tall as the text around them. */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  flex: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #9fc6e8;
+  color: var(--text);
+  font: 15px/1.4 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+.layout {
+  position: fixed;
+  inset: 0;
+}
+
+/* The scene. */
+.stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(#8ec5f0, #dcefff);
+}
+
+.stage.drop {
+  outline: 4px dashed var(--accent);
+  outline-offset: -10px;
+}
+
+#map,
+#overlay {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#overlay,
+#labels {
+  pointer-events: none;
+}
+
+#labels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* A glass card. */
+.card,
+.banner,
+.bar,
+.now {
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.card {
+  padding: 14px 16px;
+  overflow: hidden;
+}
+
+.card:empty,
+.now:empty,
+#help:empty {
+  display: none;
+}
+
+/* Banner: mode, run and clock. */
+.banner {
+  position: absolute;
+  top: var(--edge);
+  left: var(--edge);
+  max-width: calc(100vw - var(--column) - 3 * var(--edge));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 8px 16px 8px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.banner-mode {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+.banner-mode.live {
+  background: var(--live);
+}
+
+/* A played game (phase 9-5): words, not a shouted mode. */
+.banner-mode.played {
+  letter-spacing: 0;
+}
+
+.banner-run {
+  color: var(--muted);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.banner-error {
+  color: var(--c-wrong);
+  font-weight: 700;
+  white-space: normal;
+}
+
+/* Headline of what happens now (package F). */
+.now {
+  position: absolute;
+  top: var(--edge);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: min(640px, calc(100vw - 2 * var(--column)));
+  padding: 10px 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Columns of cards. */
+.column {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-height: 0;
+  pointer-events: none;
+}
+
+.column > * {
+  pointer-events: auto;
+}
+
+.column-left {
+  top: calc(var(--edge) + 48px + var(--gap));
+  left: var(--edge);
+  width: var(--column-left);
+  max-height: calc(100% - 2 * var(--edge) - 48px - var(--gap) - 84px);
+}
+
+.column-right {
+  top: var(--edge);
+  right: var(--edge);
+  bottom: calc(var(--edge) + 72px + var(--gap));
+  width: var(--column);
+}
+
+#story {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: 34%;
+  overflow: auto;
+}
+
+/* The game ended (phase 9-5): its end card takes the right column (#game,
+   z-index 41). A neighbor picked then shows their card over it; closing the
+   card (×) gives the end card back. */
+:root[data-game-phase='ended'][data-picked] .column-right {
+  z-index: 42;
+}
+
+/* With a neighbor's card open, the chronicle gives it room. */
+.column-right:has(.rs-person) #story {
+  max-height: 18%;
+}
+
+#side {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Figures and batch: folded away, they matter mostly live with a model. */
+.dock {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.dock-title {
+  align-self: flex-end;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-soft);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  list-style: none;
+}
+
+.dock-title::-webkit-details-marker {
+  display: none;
+}
+
+.dock-title:empty::before {
+  content: '⚙';
+}
+
+.dock[open] > .card + .card {
+  margin-top: var(--gap);
+}
+
+/* Bottom bar. */
+.bar {
+  position: absolute;
+  left: var(--edge);
+  right: var(--edge);
+  bottom: var(--edge);
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  min-height: 72px;
+  padding: 10px 16px;
+}
+
+#timeline {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+#input {
+  flex: 0 0 auto;
+}
+
+#input:empty {
+  display: none;
+}
+
+/* Views (core/app.js app.ui): <html data-ui="simple|full|tech">.
+
+   Zone                       simple                 full     tech
+   banner, now, rumor, bar    yes                    yes      yes
+   story (chronicle)          no                     yes      yes
+   side                       only with a selection  yes      yes
+   dock (figures and batch)   no                     folded   open (app.ui sets it)
+   .tech-only (tick, turn…)   no                     no       yes
+
+   With data-only (the story mode, app.ui.only) the view does not count: only
+   the zones marked data-shown are seen. */
+:root[data-ui='simple']:not([data-only]) [data-zone='story'],
+:root[data-ui='simple']:not([data-only]) [data-zone='dock'],
+:root[data-ui='simple']:not([data-only]):not([data-picked]):not([data-game]) [data-zone='side'] {
+  display: none;
+}
+
+/* Inside the game (<html data-game>, phase 9-5): always the simple view, plus
+   #side (who told whom) without a selection; no view switch (story/help.js)
+   and no «Ver la historia» in the help card (the story mode of recordings). */
+:root[data-game] #help .st-views,
+:root[data-game] #help .st-gnav .st-gbtn.ghost {
+  display: none;
+}
+
+:root:not([data-ui='tech']) .tech-only {
+  display: none !important;
+}
+
+:root[data-only] [data-zone]:not([data-shown]) {
+  display: none !important;
+}
+
+/* One side of the split screen (embed=1): only the scene. */
+[data-embed] .banner,
+[data-embed] .now,
+[data-embed] .column,
+[data-embed] .bar,
+[data-embed] #summary,
+[data-embed] #help,
+[data-embed] #sound {
+  display: none;
+}
+
+/* Photo mode (phase 8-2, 2.15): <html data-photo>, H or ?photo=1. Only the scene. */
+[data-photo] .layout > :not(#stage),
+[data-photo] #stage > :not(#map):not(#overlay) {
+  display: none !important;
+}
+
+/* The overlay canvas stays laid out: core/app.js measures the camera with it. */
+[data-photo] #overlay {
+  visibility: hidden;
+}
+
+/* ── Small screens (phase 8-1, 1.12) ─────────────────────────────────
+
+   > 1100 px    columns open, as above
+   ≤ 1100 px    the columns fold into drawers: a button on each side opens
+                one (<html data-drawer="left|right">, core/app.js); the
+                layout vars go to 0 so the rest centres on the whole stage.
+                A folded drawer is inert (app.js), out of the Tab order, and
+                «El rumor» tells how many know it: «El rumor · 12/25»
+   ≤ 600 px     a phone: only the story mode (its sentence), the bar and
+                the «?» of the help (its card opens over everything) */
+
+.drawer-btn {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --edge: 10px;
+    --drawer: min(340px, 86vw);
+    --column: 0px;
+    --column-left: 0px;
+  }
+
+  .column-left,
+  .column-right {
+    width: var(--drawer);
+    z-index: 20;
+    transition: transform 0.25s ease;
+  }
+
+  /* The drawers open under their buttons, which stay put. */
+  .column-left {
+    top: calc(var(--edge) + 48px + 2 * var(--gap) + 34px);
+    max-height: calc(100% - 3 * var(--edge) - 48px - 2 * var(--gap) - 34px - 84px);
+    transform: translateX(calc(-100% - 2 * var(--edge)));
+  }
+
+  .column-right {
+    top: calc(var(--edge) + 48px + 2 * var(--gap) + 34px);
+    transform: translateX(calc(100% + 2 * var(--edge)));
+  }
+
+  :root[data-drawer='left'] .column-left,
+  :root[data-drawer='right'] .column-right {
+    transform: none;
+  }
+
+  /* An opened drawer takes the focus (app.js): the drawer itself is the cue. */
+  .column:focus {
+    outline: none;
+  }
+
+  .banner {
+    max-width: calc(100vw - 2 * var(--edge) - 120px);
+  }
+
+  .now {
+    top: calc(var(--edge) + 48px + var(--gap));
+    max-width: calc(100vw - 2 * var(--edge) - 200px);
+  }
+
+  .drawer-btn {
+    display: block;
+    position: absolute;
+    top: calc(var(--edge) + 48px + var(--gap));
+    z-index: 21;
+    height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--glass-edge);
+    border-radius: 999px;
+    background: var(--glass);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+    box-shadow: var(--shadow-soft);
+    color: var(--text);
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .drawer-left {
+    left: var(--edge);
+  }
+
+  .drawer-right {
+    right: var(--edge);
+  }
+
+  .drawer-btn[aria-expanded='true'] {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* Nothing to show on the right in the simple view without a selection. */
+  :root[data-ui='simple']:not([data-only]):not([data-picked]):not([data-game]) .drawer-right,
+  [data-embed] .drawer-btn,
+  [data-background] .drawer-btn,
+  [data-start] .drawer-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .drawer-btn,
+  .column,
+  [data-zone='now'],
+  [data-zone='summary'] {
+    display: none !important;
+  }
+
+  /* The help stays reachable: only its «?» button, small over the bar's
+     corner; the view switch and the director go (story/help.js). */
+  #help .st-views,
+  #help .st-dir {
+    display: none;
+  }
+
+  .banner {
+    max-width: calc(100vw - 2 * var(--edge));
+    min-height: 40px;
+  }
+}

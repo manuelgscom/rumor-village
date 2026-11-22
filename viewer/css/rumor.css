@@ -1,0 +1,1072 @@
+/* Rumor panels (viewer/js/rumor/): the "El rumor" card in #rumor (rc-*) and
+   the consequences, graph and neighbor card in #side (rs-*). Uses the tokens
+   of core.css. */
+
+#rumor,
+#side {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+:where(#rumor, #side) button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ── #rumor: the card of the fact ─────────────────────────────── */
+
+#rumor {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 14px 16px 12px;
+}
+
+.rc {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rc-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rc-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+}
+
+.rc-kicker {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* It may wrap under the kicker: «empezó a correr a las 07:00 · por Ana» whole (phase 9-5). */
+.rc-when {
+  margin-left: auto;
+  min-width: 0;
+  text-align: right;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.rc-factsel {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--glass-strong);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.rc-empty {
+  color: var(--muted);
+}
+
+.rc-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rc-what {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.rc-text {
+  font-style: italic;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.rc-slots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.rc-slot {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 5px 9px 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(31, 138, 112, 0.09);
+  box-shadow: inset 3px 0 0 var(--c-correct);
+}
+
+.rc-slot.rc-none {
+  background: var(--surface-2);
+  box-shadow: none;
+}
+
+.rc-slabel {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rc-svalue {
+  font-size: 17px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rc-unit {
+  margin-left: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.rc-none .rc-svalue {
+  color: var(--faint);
+}
+
+.rc-spread {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.rc-know {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.rc-n {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.rc-of {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.rc-bar {
+  display: flex;
+  height: 14px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--c-unknown);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.rc-seg {
+  flex: 0 0 0;
+  min-width: 3px;
+  transition: flex-grow 0.25s ease;
+}
+
+.rc-seg + .rc-seg {
+  box-shadow: inset 1.5px 0 0 rgba(255, 255, 255, 0.85);
+}
+
+.rc-correct {
+  background: var(--c-correct);
+}
+
+.rc-incomplete {
+  background: var(--c-incomplete);
+}
+
+.rc-wrong {
+  background: var(--c-wrong);
+}
+
+.rc-unknown {
+  background: var(--c-unknown);
+}
+
+.rc-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 10px;
+  font-size: 12.5px;
+}
+
+.rc-key {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.rc-zero {
+  opacity: 0.5;
+}
+
+.rc-swatch {
+  flex: 0 0 auto;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.rc-klabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rc-kn {
+  margin-left: auto;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.rc-curvebox {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.rc-curve {
+  display: block;
+  width: 100%;
+  height: 46px;
+}
+
+.rc-axis {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.rc-axislabel {
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* ── #side ────────────────────────────────────────────────────── */
+
+.rside {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rs-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.rs-sec + .rs-sec,
+.rs-person + .rs-sec {
+  padding-top: 11px;
+  border-top: 1px solid var(--line);
+}
+
+.rs-h {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.rs-htitle {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rs-hextra {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.rs-dimtext,
+.rs-more {
+  color: var(--muted);
+}
+
+.rs-hint {
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.rs-name {
+  font-weight: 800;
+  border-radius: 6px;
+}
+
+.rs-name:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.rs-time {
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.rs-time:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.rs-names {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px 8px;
+}
+
+.rs-x {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.rs-x:hover {
+  background: var(--text);
+  color: #fff;
+}
+
+.rs-xs {
+  width: 22px;
+  height: 22px;
+  font-size: 15px;
+}
+
+/* Changed values: «a las ~~22:00~~ 23:00». */
+.rs-old {
+  color: var(--faint);
+  text-decoration-thickness: 2px;
+  text-decoration-color: rgba(209, 73, 91, 0.75);
+}
+
+.rs-new {
+  font-weight: 900;
+}
+
+.rs-btile.rs-changed .rs-new,
+.rs-hop .rs-new {
+  padding: 0 5px;
+  border-radius: 6px;
+  background: var(--c-wrong);
+  color: #fff;
+}
+
+.rs-cause {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(209, 73, 91, 0.12);
+  color: #b0303f;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.rs-note {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* The card of a neighbor. */
+.rs-person {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rs-who {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.rs-avatar {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--v, var(--c-unknown));
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--v, var(--c-unknown)), var(--shadow-soft);
+}
+
+.rs-id {
+  min-width: 0;
+}
+
+.rs-pname {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rs-role {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+/* The card of a neighbor inside the game (phase 9-5): who they are. */
+.rs-profile {
+  display: grid;
+  gap: 2px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.rs-pline:first-child {
+  font-weight: 700;
+}
+
+.rs-pline + .rs-pline {
+  color: var(--muted);
+}
+
+.rs-where {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.rs-place {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.rs-pill {
+  flex: 0 0 auto;
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+}
+
+.rs-correct {
+  background: var(--c-correct);
+}
+
+.rs-incomplete {
+  background: var(--c-incomplete);
+  color: #4a3200; /* dark on amber (phase 9-5), contrast above 5:1 */
+}
+
+.rs-wrong {
+  background: var(--c-wrong);
+}
+
+.rs-unknown {
+  background: var(--c-unknown);
+}
+
+/* What they believe, slot by slot: tiles like those of the fact. */
+.rs-belief {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.rs-btile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 4px 9px 5px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.rs-btile.rs-same {
+  background: rgba(31, 138, 112, 0.09);
+  box-shadow: inset 3px 0 0 var(--c-correct);
+}
+
+.rs-btile.rs-changed {
+  background: rgba(209, 73, 91, 0.11);
+  box-shadow: inset 3px 0 0 var(--c-wrong);
+}
+
+.rs-btile.rs-missing {
+  box-shadow: inset 3px 0 0 var(--c-unknown);
+}
+
+.rs-btop {
+  display: flex;
+  align-items: center;
+}
+
+.rs-slot {
+  white-space: nowrap;
+  font-size: 10.5px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rs-val {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.rs-btile .rs-new {
+  font-weight: 900;
+}
+
+.rs-doubt,
+.rs-gone {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(30, 42, 54, 0.07);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.rs-mark {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--faint);
+}
+
+.rs-same .rs-mark {
+  color: var(--c-correct);
+}
+
+.rs-changed .rs-mark {
+  color: var(--c-wrong);
+}
+
+.rs-links {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 12px;
+}
+
+.rs-link {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* The chain, as a timeline. */
+.rs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.rs-chip {
+  padding: 1px 9px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-weight: 700;
+}
+
+.rs-chip.rs-on {
+  background: var(--text);
+  color: #fff;
+}
+
+.rs-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rs-step {
+  position: relative;
+  padding: 0 0 9px 20px;
+}
+
+.rs-step::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--dot);
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.rs-step::after {
+  content: '';
+  position: absolute;
+  left: 8.5px;
+  top: 18px;
+  bottom: -2px;
+  width: 1.5px;
+  background: rgba(30, 42, 54, 0.18);
+}
+
+.rs-step:last-child {
+  padding-bottom: 0;
+}
+
+.rs-step:last-child::after {
+  display: none;
+}
+
+.rs-origin::before {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.85);
+}
+
+.rs-step.rs-hit::before {
+  width: 14px;
+  height: 14px;
+  left: 2px;
+  top: 4px;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(209, 73, 91, 0.3);
+}
+
+.rs-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 6px;
+}
+
+.rs-arrow {
+  color: var(--faint);
+  font-weight: 800;
+}
+
+.rs-faithful {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--c-correct);
+}
+
+.rs-hop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px 7px;
+  margin-top: 4px;
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(209, 73, 91, 0.07);
+}
+
+.rs-hop.rs-lead {
+  background: rgba(209, 73, 91, 0.12);
+}
+
+/* Inside the game (phase 9-5) the chain follows one detail: a change of
+   another one is grey, not red, so a «correcta» card does not look wrong. */
+:root[data-game] .rs-hop:not(.rs-lead) {
+  background: rgba(30, 42, 54, 0.05);
+}
+
+:root[data-game] .rs-hop:not(.rs-lead) .rs-new {
+  background: var(--faint);
+}
+
+:root[data-game] .rs-hop:not(.rs-lead) .rs-cause {
+  background: rgba(30, 42, 54, 0.08);
+  color: var(--muted);
+}
+
+.rs-hop .rs-change {
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+.rs-tail .rs-note {
+  padding-top: 2px;
+}
+
+/* Consequences: three tiles. */
+.rs-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.rs-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
+  padding: 7px 9px 7px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--g) 10%, white);
+  box-shadow: inset 0 3px 0 var(--g);
+  text-align: left;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.rs-tile:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 3px 0 var(--g), var(--shadow-soft);
+}
+
+.rs-tile.rs-on {
+  background: var(--g);
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+}
+
+.rs-tile.rs-zero {
+  opacity: 0.55;
+}
+
+.rs-tcount {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--g);
+  font-variant-numeric: tabular-nums;
+}
+
+.rs-on .rs-tcount {
+  color: #fff;
+}
+
+.rs-tlabel {
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.rs-tsub {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.rs-on .rs-tsub {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.rs-members {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--g) 8%, white);
+}
+
+.rs-mhead {
+  display: flex;
+  align-items: center;
+}
+
+.rs-mhead .rs-htitle {
+  color: var(--g);
+}
+
+.rs-ok {
+  font-weight: 700;
+  color: var(--c-correct);
+}
+
+.rs-culprits {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rs-culprit {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  box-shadow: inset 0 0 0 2px var(--text), var(--shadow-soft);
+}
+
+.rs-ctop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rs-ckicker {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rs-cname {
+  font-size: 17px;
+}
+
+.rs-cid {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.rs-culprit .rs-hop {
+  margin-top: 0;
+}
+
+.rs-led {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 7px;
+}
+
+/* Graph. */
+.rs-graph {
+  display: block;
+  width: 100%;
+}
+
+/* ── Telephone strip (phase 8-2, 2.12; js/rumor/stripview.js) ──────────
+
+   A band over the bottom bar, the width of the screen, only for the
+   telephone row. <html data-strip> lets the columns, the floating buttons
+   (story.css) and the summary (summary.css) make room for it.
+
+   ┌ ENTRA ┐ ┌Carmen┐ ┌ Ana ┐ … ┌ SALE · Rafael ┐
+   └───────┘ └──────┘ └─────┘   └───────────────┘
+   └ .bar ─────────────────────────────────────────┘ */
+:root[data-strip] {
+  --strip: 118px;
+}
+
+.rstrip {
+  position: absolute;
+  left: var(--edge);
+  right: var(--edge);
+  bottom: calc(var(--edge) + 72px + var(--gap));
+  height: var(--strip);
+  z-index: 4;
+  padding: 8px 10px;
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.rstrip[hidden],
+:root[data-only] .rstrip,
+[data-embed] .rstrip {
+  display: none;
+}
+
+.rstrip-in {
+  display: flex;
+  gap: 8px;
+  height: 100%;
+  min-width: 0;
+}
+
+.rstrip-cells {
+  flex: 1 1 auto;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(58px, 1fr);
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.rstrip-cells > li {
+  position: relative;
+  min-width: 0;
+}
+
+/* A small arrow between cells: the message goes left to right. */
+.rstrip-cells > li + li::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  border: 3px solid transparent;
+  border-left-color: color-mix(in srgb, var(--muted) 55%, transparent);
+  transform: translate(1px, -50%);
+}
+
+.rstrip-cell,
+.rstrip-end {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  padding: 5px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 11.5px;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.rstrip-cell {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+.rstrip-cell:hover {
+  border-color: var(--accent);
+}
+
+.rstrip-cell.on {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+.rstrip-cell.off {
+  background: transparent;
+  border-style: dashed;
+  opacity: 0.6;
+}
+
+.rstrip-name {
+  font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rstrip-vals {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rstrip-v {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.rstrip-v.none {
+  color: var(--faint);
+  font-weight: 400;
+}
+
+.rstrip-v.changed {
+  color: var(--c-wrong);
+  font-weight: 900;
+}
+
+.rstrip-end {
+  flex: 0 0 auto;
+  width: 104px;
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.rstrip-out {
+  width: 124px;
+}
+
+.rstrip-k {
+  font-size: 10.5px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The rest makes room. */
+:root[data-strip] .column-right {
+  bottom: calc(var(--edge) + 72px + 2 * var(--gap) + var(--strip));
+}
+
+:root[data-strip] .column-left {
+  max-height: calc(100% - 2 * var(--edge) - 48px - 2 * var(--gap) - 84px - var(--strip));
+}
+
+/* Phones keep only the story sentence and the bar (core.css). */
+@media (max-width: 600px) {
+  .rstrip {
+    display: none;
+  }
+
+  :root[data-strip] {
+    --strip: 0px;
+  }
+}

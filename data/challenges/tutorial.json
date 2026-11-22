@@ -1,0 +1,21 @@
+{
+  "format": 1,
+  "id": "tutorial",
+  "order": 0,
+  "tutorial": true,
+  "title": { "es": "Tu primer rumor", "en": "Your first rumor" },
+  "intro": {
+    "es": "Una partida corta para aprender: que tu rumor llegue a muchos vecinos antes de la una de la tarde. Tú eliges el rumor, a quién se lo cuentas y lo miras correr; no hay estrellas.",
+    "en": "A short game to learn: get your rumor to many neighbors before one in the afternoon. You choose the rumor and who you tell, and watch it run; there are no stars."
+  },
+  "settings": { "type": "village", "neighbors": 25, "town": 424, "trait_mix": 0, "distortion": "high", "until": "13:00" },
+  "rumor": { "fact": { "what": null, "who": null, "where": null, "when": null, "amount": null }, "at": "start" },
+  "open": ["what", "who", "where", "when", "amount", "to", "mode"],
+  "max_to": 1,
+  "to_place": true,
+  "measure": "informed_end",
+  "zero_if": null,
+  "subject": null,
+  "deadline": null,
+  "stars": null
+}

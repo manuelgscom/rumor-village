@@ -1,0 +1,20 @@
+{
+  "format": 1,
+  "id": "patient-zero",
+  "order": 2,
+  "title": { "es": "Paciente cero", "en": "Patient zero" },
+  "intro": {
+    "es": "Que tu rumor llegue al mayor número de vecinos antes de acabar el día. Tú eliges el rumor, a un solo vecino y cuándo se lo cuentas; cada estrella pide más enterados, y no todos son igual de cotillas.",
+    "en": "Get your rumor to as many neighbors as possible before the day ends. You choose the rumor, a single neighbor and when you tell them; each star asks for more who heard about it, and not everyone gossips the same."
+  },
+  "settings": { "type": "village", "neighbors": 25, "town": 233, "trait_mix": 0, "distortion": "normal" },
+  "rumor": { "fact": { "what": null, "who": null, "where": null, "when": null, "amount": null } },
+  "open": ["what", "who", "where", "when", "amount", "to", "at", "mode"],
+  "max_to": 1,
+  "to_place": false,
+  "measure": "informed_end",
+  "zero_if": null,
+  "subject": null,
+  "deadline": null,
+  "stars": { "ai": [12,  17,  21], "rules": [6,  9,  12] }
+}

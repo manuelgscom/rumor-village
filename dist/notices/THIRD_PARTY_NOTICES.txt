@@ -1,0 +1,251 @@
+Rumor Village - third-party notices
+===================================
+
+Rumor Village itself is released under the MIT License (see LICENSE, next to
+this file). It is built with, and ships, the third-party components listed
+below. Each component stays under its own license; the full texts are in the
+licenses/ folder.
+
+There are four prebuilt packages:
+
+  linux-cuda      Linux x64, CUDA 12.9 backend
+  linux-vulkan    Linux x64, Vulkan backend
+  windows-cuda    Windows x64, CUDA 12.9 backend
+  windows-vulkan  Windows x64, Vulkan backend
+
+Every package carries this same file and the same licenses/ folder. The line
+"Included in" of each section says which packages actually contain the
+component; a section that does not name your package does not apply to it.
+
+The AI model is not inside any package: the game downloads it on first start
+(see the last section).
+
+
+-------------------------------------------------------------------------------
+1. llama.cpp and ggml
+-------------------------------------------------------------------------------
+What:        Library that runs the language model on the GPU (llama.cpp,
+             llama-common and ggml with its CPU, CUDA or Vulkan backend),
+             statically linked into the rumor-village executable.
+Version:     v0.9.0 (commit cd959bae99ff4bed22bef2604f45241c09bbb8c8)
+Source:      https://github.com/ggml-org/llama.cpp
+Included in: linux-cuda, linux-vulkan, windows-cuda, windows-vulkan
+License:     MIT - Copyright (c) 2023-2026 The ggml authors
+Text:        licenses/llama.cpp-ggml-MIT.txt
+
+llama.cpp contains code under other licenses, listed in sections 2 to 6.
+
+
+-------------------------------------------------------------------------------
+2. cpp-httplib (vendored by llama.cpp)
+-------------------------------------------------------------------------------
+What:        HTTP server and client library; serves the game to the browser.
+Version:     0.64.0
+Source:      https://github.com/yhirose/cpp-httplib
+Included in: linux-cuda, linux-vulkan, windows-cuda, windows-vulkan
+License:     MIT - Copyright (c) 2017 yhirose
+Text:        licenses/cpp-httplib-MIT.txt
+
+
+-------------------------------------------------------------------------------
+3. JSON for Modern C++ (nlohmann/json)
+-------------------------------------------------------------------------------
+What:        JSON library, used by the game engine and by llama.cpp.
+Version:     3.12.0
+Source:      https://github.com/nlohmann/json
+Included in: linux-cuda, linux-vulkan, windows-cuda, windows-vulkan
+License:     MIT - Copyright (c) 2013-2025 Niels Lohmann
+Text:        licenses/nlohmann-json-MIT.txt
+
+
+-------------------------------------------------------------------------------
+4. subprocess.h (vendored by llama.cpp)
+-------------------------------------------------------------------------------
+What:        Single-header library to start processes, compiled into
+             llama-common.
+Source:      https://github.com/sheredom/subprocess.h
+Included in: linux-cuda, linux-vulkan, windows-cuda, windows-vulkan
+License:     The Unlicense (public domain dedication)
+Text:        licenses/subprocess.h-Unlicense.txt
+
+
+-------------------------------------------------------------------------------
+5. llamafile sgemm and YaRN (code inside ggml)
+-------------------------------------------------------------------------------
+What:        Matrix multiplication kernels of the ggml CPU backend
+             (ggml/src/ggml-cpu/llamafile/sgemm.cpp), and the YaRN rotary
+             embedding algorithm (ggml-cpu/ops.cpp, ggml-cuda/rope.cu).
+Source:      https://github.com/Mozilla-Ocho/llamafile
+             https://github.com/jquesnelle/yarn
+Included in: linux-cuda, linux-vulkan, windows-cuda, windows-vulkan
+License:     MIT - Copyright 2024 Mozilla Foundation
+             MIT - Copyright (c) 2023 Jeffrey Quesnelle and Bowen Peng
+Text:        licenses/llamafile-sgemm-MIT.txt
+             licenses/YaRN-MIT.txt
+
+
+-------------------------------------------------------------------------------
+6. Unicode Character Database (data inside llama.cpp)
+-------------------------------------------------------------------------------
+What:        Unicode character tables used by the tokenizer
+             (llama.cpp src/unicode-data.cpp, generated from the Unicode
+             Character Database).
+Source:      https://www.unicode.org/ucd/
+Included in: linux-cuda, linux-vulkan, windows-cuda, windows-vulkan
+License:     Unicode License V3 - Copyright (c) 1991-2026 Unicode, Inc.
+Text:        licenses/Unicode-3.0.txt
+
+
+-------------------------------------------------------------------------------
+7. three.js
+-------------------------------------------------------------------------------
+What:        3D library of the game viewer (viewer/vendor/three/).
+Version:     0.186.1
+Source:      https://github.com/mrdoob/three.js
+Included in: linux-cuda, linux-vulkan, windows-cuda, windows-vulkan
+License:     MIT - Copyright (c) 2010-2026 three.js authors
+Text:        licenses/three.js-MIT.txt (also viewer/vendor/three/LICENSE)
+
+
+-------------------------------------------------------------------------------
+8. Kenney 3D models
+-------------------------------------------------------------------------------
+What:        Characters, town and nature models of the game
+             (viewer/assets/characters/, viewer/assets/town/), from the packs
+             "Mini Characters" (2.0), "Fantasy Town Kit" (2.0) and
+             "Nature Kit" (2.1).
+Source:      https://kenney.nl
+Included in: linux-cuda, linux-vulkan, windows-cuda, windows-vulkan
+License:     Creative Commons Zero (CC0 1.0), public domain dedication
+Text:        licenses/Kenney-Mini-Characters-CC0.txt
+             licenses/Kenney-Fantasy-Town-Kit-CC0.txt
+             licenses/Kenney-Nature-Kit-CC0.txt
+
+
+-------------------------------------------------------------------------------
+9. Nunito font
+-------------------------------------------------------------------------------
+What:        Font of the game interface (viewer/assets/fonts/), variable
+             font, Latin and Latin Extended subsets, from
+             @fontsource-variable/nunito 5.3.0.
+Source:      https://github.com/googlefonts/nunito
+Included in: linux-cuda, linux-vulkan, windows-cuda, windows-vulkan
+License:     SIL Open Font License 1.1
+             Copyright 2014 The Nunito Project Authors
+Text:        licenses/Nunito-OFL-1.1.txt
+
+
+-------------------------------------------------------------------------------
+10. NVIDIA CUDA Runtime and CUDA BLAS libraries
+-------------------------------------------------------------------------------
+What:        Libraries of the CUDA backend, shipped unmodified:
+               Linux:   lib/libcudart.so.12, lib/libcublas.so.12,
+                        lib/libcublasLt.so.12
+               Windows: cudart64_12.dll, cublas64_12.dll, cublasLt64_12.dll
+             They are used only by Rumor Village. They need an NVIDIA GPU
+             and driver; the driver is not shipped.
+Version:     CUDA Toolkit 12.9
+Source:      https://developer.nvidia.com/cuda-toolkit
+Included in: linux-cuda, windows-cuda (ONLY the CUDA packages)
+License:     NVIDIA CUDA Toolkit End User License Agreement. These files are
+             distributable under its Attachment A. They are NOT covered by
+             the MIT license of Rumor Village: you may not modify, reverse
+             engineer or redistribute them on their own.
+Text:        licenses/NVIDIA-CUDA-12.9-EULA-excerpt.txt
+             Full agreement:
+             https://docs.nvidia.com/cuda/archive/12.9.1/eula/index.html
+
+
+-------------------------------------------------------------------------------
+11. NVIDIA CUDA Core Compute Libraries (CUB, Thrust, libcu++)
+-------------------------------------------------------------------------------
+What:        Header-only GPU libraries compiled into the CUDA backend of ggml
+             (sorting, sums and scans).
+Version:     CCCL 2.8 (the one in CUDA Toolkit 12.9)
+Source:      https://github.com/NVIDIA/cccl
+Included in: linux-cuda, windows-cuda (ONLY the CUDA packages)
+License:     Apache License 2.0 (Thrust), Apache License 2.0 with LLVM
+             Exceptions (libcu++), BSD 3-Clause (CUB)
+Text:        licenses/NVIDIA-CCCL.txt
+
+
+-------------------------------------------------------------------------------
+12. Vulkan Loader (Khronos Vulkan-Loader)
+-------------------------------------------------------------------------------
+What:        The Vulkan loader, shipped as lib/libvulkan.so.1 so that the
+             game starts on systems without it. It finds the Vulkan driver of
+             your graphics card. The Windows Vulkan package does not ship it:
+             it uses the vulkan-1.dll that comes with the graphics driver.
+Version:     1.3 (the one of the Ubuntu build image)
+Source:      https://github.com/KhronosGroup/Vulkan-Loader
+Included in: linux-vulkan (ONLY)
+License:     Apache License 2.0; loader/cJSON.* and
+             loader/dirent_on_windows.* under MIT
+             Copyright 2015-2022 The Khronos Group Inc., Valve Corporation,
+             LunarG, Inc. and others
+Text:        licenses/Vulkan-Loader-LICENSE.txt
+             licenses/Vulkan-Loader-copyright.txt (copyright of the Ubuntu
+             package the library is taken from)
+             licenses/Apache-2.0.txt
+
+
+-------------------------------------------------------------------------------
+13. Vulkan headers (Vulkan-Headers, Vulkan-Hpp)
+-------------------------------------------------------------------------------
+What:        Vulkan API headers compiled into the Vulkan backend of ggml.
+Source:      https://github.com/KhronosGroup/Vulkan-Headers
+Included in: linux-vulkan, windows-vulkan
+License:     Apache License 2.0 OR MIT
+             Copyright 2015-2023 The Khronos Group Inc.
+Text:        licenses/Vulkan-Headers-LICENSE.txt
+             licenses/Apache-2.0.txt
+
+
+-------------------------------------------------------------------------------
+14. GCC runtime libraries
+-------------------------------------------------------------------------------
+What:        The C++ standard library (libstdc++) and the GCC support
+             library (libgcc), statically linked into the Linux executable,
+             and the OpenMP runtime (libgomp) when it is in lib/.
+Source:      https://gcc.gnu.org
+Included in: linux-cuda, linux-vulkan (ONLY the Linux packages)
+License:     GNU GPL version 3 with the GCC Runtime Library Exception 3.1.
+             The Exception allows these libraries to be combined with and
+             distributed as part of programs under any license, such as
+             Rumor Village.
+Text:        licenses/GCC-Runtime-Library-Exception-3.1.txt
+             GPL version 3: https://www.gnu.org/licenses/gpl-3.0.txt
+
+
+-------------------------------------------------------------------------------
+15. Microsoft C/C++ runtime
+-------------------------------------------------------------------------------
+What:        The runtime of the Microsoft C/C++ compiler (MSVC), statically
+             linked into rumor-village.exe (/MT). No Microsoft runtime DLL is
+             shipped, and nothing has to be installed.
+Included in: windows-cuda, windows-vulkan (ONLY the Windows packages)
+License:     Microsoft Visual Studio license terms; static linking into an
+             application is allowed and needs no notice.
+
+
+-------------------------------------------------------------------------------
+16. The AI model (NOT included; downloaded on first start)
+-------------------------------------------------------------------------------
+What:        gemma-4-E4B-it-rumor-Q4_K_M.gguf, fine-tuned for Rumor Village
+             from Google's Gemma 4 E4B (gemma-4-E4B-it) and quantized to
+             Q4_K_M (GGUF). Modified files: fine-tuning and conversion. Its
+             name, size, SHA-256 and origin are in model.json. The game
+             downloads it into your data folder the first time it can play
+             with AI.
+Source:      https://huggingface.co/google/gemma-4-E4B-it (base model)
+Included in: none (downloaded)
+License:     Apache License 2.0 (Gemma 4 license:
+             https://ai.google.dev/gemma/docs/gemma_4_license)
+Text:        licenses/Apache-2.0.txt
+
+
+-------------------------------------------------------------------------------
+Not shipped
+-------------------------------------------------------------------------------
+doctest (the test framework of the engine) is used only to build the tests
+and is not part of any package.

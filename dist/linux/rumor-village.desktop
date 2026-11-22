@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Rumor Village
+Comment=A village of a hundred neighbours and one rumour
+Comment[es]=Un pueblo de cien vecinos y un rumor
+Exec=rumor-village
+Icon=rumor-village
+Categories=Game;
+Terminal=true

@@ -1,0 +1,9 @@
+{
+  "about": "Recordings of the start screen (viewer/js/start/). Paths are relative to this file. Format of runs/demo/manifest.json (phase 6).",
+  "recordings": [
+    {"id": "party-100-es-s2", "file": "party-100-es-s2.jsonl", "scenario": "party-100", "lang": "es", "model": null, "quant": null, "finetuned": false, "seed": 2, "gpu": null, "planes": []},
+    {"id": "party-25-en-s4", "file": "party-25-en-s4.jsonl", "scenario": "party-25", "lang": "en", "model": null, "quant": null, "finetuned": false, "seed": 4, "gpu": null, "planes": []},
+    {"id": "telephone-20-en-s5", "file": "telephone-20-en-s5.jsonl", "scenario": "telephone-20", "lang": "en", "model": null, "quant": null, "finetuned": false, "seed": 5, "gpu": null, "planes": []},
+    {"id": "telephone-20-es-s5", "file": "telephone-20-es-s5.jsonl", "scenario": "telephone-20", "lang": "es", "model": null, "quant": null, "finetuned": false, "seed": 5, "gpu": null, "planes": []}
+  ]
+}

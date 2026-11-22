@@ -1,0 +1,7 @@
+# Models are downloaded, never committed (see README: the model is on Hugging Face)
+models/
+# Build outputs: binaries, packages, web version, captures
+build/
+# Run logs: only the samples for the viewer are kept
+runs/*
+!runs/samples/

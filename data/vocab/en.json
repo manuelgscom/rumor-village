@@ -1,0 +1,69 @@
+{
+  "places": {
+    "square": "square",
+    "bar": "bar",
+    "church": "church",
+    "market": "market",
+    "bakery": "bakery",
+    "school": "school",
+    "town_hall": "town hall",
+    "pharmacy": "pharmacy",
+    "fountain": "fountain",
+    "mill": "mill",
+    "chapel": "chapel",
+    "river": "river",
+    "upper_quarter": "upper quarter",
+    "lower_quarter": "lower quarter",
+    "east_quarter": "east quarter",
+    "west_quarter": "west quarter"
+  },
+  "jobs": {
+    "baker": ["baker", "baker"],
+    "bartender": ["bartender", "bartender"],
+    "teacher": ["teacher", "teacher"],
+    "priest": ["priest", "priest"],
+    "pharmacist": ["pharmacist", "pharmacist"],
+    "clerk": ["clerk", "clerk"],
+    "merchant": ["shopkeeper", "shopkeeper"],
+    "miller": ["miller", "miller"],
+    "farmer": ["farmer", "farmer"],
+    "carpenter": ["carpenter", "carpenter"],
+    "seamstress": ["dressmaker", "dressmaker"],
+    "retired": ["retiree", "retiree"]
+  },
+  "traits": {
+    "gossip": ["gossip", "gossip"],
+    "sociable": ["sociable", "sociable"],
+    "prudent": ["prudent", "prudent"],
+    "discreet": ["discreet", "discreet"],
+    "shy": ["shy", "shy"],
+    "exaggerator": ["exaggerator", "exaggerator"]
+  },
+  "relations": {
+    "family": ["relative", "relative"],
+    "friend": ["friend", "friend"],
+    "coworker": ["coworker", "coworker"],
+    "acquaintance": ["neighbor", "neighbor"],
+    "rival": ["rival", "rival"]
+  },
+  "today": "today",
+  "tomorrow": "tomorrow",
+  "what": {
+    "party": "party",
+    "lottery": "lottery prize",
+    "wedding": "wedding",
+    "concert": "concert",
+    "works": "building works",
+    "inheritance": "inheritance",
+    "fine": "fine"
+  },
+  "amount_units": {
+    "party": "people",
+    "lottery": "euros",
+    "wedding": "guests",
+    "concert": "people",
+    "works": "days",
+    "inheritance": "euros",
+    "fine": "euros"
+  }
+}

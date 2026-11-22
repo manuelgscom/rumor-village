@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rumor Village</title>
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+    <!-- Relative paths: the same page is served from /viewer/ (recordings) and from / (engine). -->
+    <script type="importmap">
+      { "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
+    </script>
+    <link rel="stylesheet" href="css/core.css" />
+    <link rel="stylesheet" href="css/render.css" />
+    <link rel="stylesheet" href="css/replay.css" />
+    <link rel="stylesheet" href="css/rumor.css" />
+    <link rel="stylesheet" href="css/panel.css" />
+    <link rel="stylesheet" href="css/live.css" />
+    <link rel="stylesheet" href="css/story.css" />
+    <link rel="stylesheet" href="css/summary.css" />
+    <link rel="stylesheet" href="css/split.css" />
+    <link rel="stylesheet" href="css/start.css" />
+    <link rel="stylesheet" href="css/banner.css" />
+    <link rel="stylesheet" href="css/sound.css" />
+    <link rel="stylesheet" href="css/game.css" />
+    <link rel="stylesheet" href="css/inspect.css" />
+    <script type="module" src="js/core/app.js"></script>
+  </head>
+  <body>
+    <!--
+      The scene fills the window; the interface floats over it.
+
+      ┌ #banner ─────────────────┐      #now       ┌ .column-right ─┐
+      ├ .column-left ┐                             │ #story         │
+      │ #rumor       │          #stage             │ #side          │
+      │              │   (#map · #overlay ·        │ #inspect       │
+      │              │    #labels · #summary)      │ .dock          │
+      │              │                             │  #panel #batch │
+      └──────────────┘          #tour              └────────────────┘
+      └ .bar: #timeline ······························ #input ────────┘
+      #help (floating buttons) · #sound (mute button) · #stats (frame meter, ?stats=1)
+      #game (screens of the game mode, ?play=1 or ?game=; over everything but #start)
+      #start (start, loading and error screens)
+      <html data-photo> (photo mode, H) hides everything but the scene.
+
+      data-zone names the zones the views hide (core/app.js app.ui, core.css).
+    -->
+    <main class="layout">
+      <div id="stage" class="stage">
+        <canvas id="map"></canvas>
+        <canvas id="overlay"></canvas>
+        <div id="labels"></div>
+        <div id="summary" data-zone="summary"></div>
+      </div>
+      <header id="banner" class="banner" data-zone="banner"></header>
+      <div id="now" class="now" data-zone="now"></div>
+      <aside class="column column-left">
+        <section id="rumor" class="card" data-zone="rumor"></section>
+      </aside>
+      <aside class="column column-right">
+        <section id="story" class="card" data-zone="story"></section>
+        <section id="side" class="card" data-zone="side"></section>
+        <section id="inspect" class="card" data-zone="inspect"></section>
+        <details class="dock" data-zone="dock">
+          <summary class="dock-title"></summary>
+          <section id="panel" class="card"></section>
+          <section id="batch" class="card"></section>
+        </details>
+      </aside>
+      <footer class="bar" data-zone="bar">
+        <div id="timeline"></div>
+        <div id="input"></div>
+      </footer>
+      <!-- Narrow screens (core.css): the columns fold into drawers opened by these. -->
+      <button type="button" class="drawer-btn drawer-left" data-drawer="left"></button>
+      <button type="button" class="drawer-btn drawer-right" data-drawer="right"></button>
+      <div id="tour" data-zone="tour"></div>
+      <div id="help" data-zone="help"></div>
+      <div id="game" data-zone="game"></div>
+      <div id="sound"></div>
+      <div id="stats"></div>
+      <div id="start"></div>
+    </main>
+    <!-- Seen only if the modules do not start: no JavaScript, or opened as file://. -->
+    <div id="nojs" class="nojs">
+      <h1>Rumor Village</h1>
+      <p lang="en">
+        The viewer needs JavaScript and has to be served over HTTP: run <code>scripts/viewer-serve.sh</code> and open
+        <code>http://127.0.0.1:8000/viewer/</code>.
+      </p>
+      <p lang="es">
+        El visor necesita JavaScript y hay que servirlo por HTTP: ejecuta <code>scripts/viewer-serve.sh</code> y abre
+        <code>http://127.0.0.1:8000/viewer/</code>.
+      </p>
+    </div>
+  </body>
+</html>

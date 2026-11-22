@@ -1,0 +1,75 @@
+/* Ambient sound button (#sound, viewer/js/sound/). Fase 8-2, package F.
+
+   A glass round button like «?» (story.css .st-fab), stacked just above the
+   view switch of the help buttons:
+
+        [🔈]        ← #sound
+     [simple|full|tech]
+     [director] [?]
+   ─────────── bar ───────────
+
+   When the help buttons are not there (story mode, phones) it takes another
+   free corner. */
+
+#sound {
+  position: absolute;
+  right: calc(var(--column) + 2 * var(--edge));
+  /* bar + gap + the two rows of .st-fab (40 + 8 + 40) + their gap */
+  bottom: calc(var(--edge) + 72px + var(--gap) + 96px);
+  z-index: 5;
+}
+
+#sound:empty,
+:root[data-loading] #sound {
+  display: none;
+}
+
+/* Story mode: the help buttons hide, the sound one drops to their place. */
+:root[data-tour] #sound {
+  bottom: calc(var(--edge) + 72px + var(--gap));
+}
+
+.snd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-soft);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.snd-btn:hover {
+  background: var(--glass-strong);
+  color: var(--text);
+}
+
+.snd-btn.on {
+  color: var(--text);
+}
+
+.snd-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.snd-icon {
+  display: block;
+}
+
+/* Phones: no help buttons; the corner under the banner, on the right. */
+@media (max-width: 600px) {
+  #sound,
+  :root[data-tour] #sound {
+    top: calc(var(--edge) + 40px + var(--gap));
+    right: var(--edge);
+    bottom: auto;
+  }
+}

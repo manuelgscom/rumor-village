@@ -1,0 +1,455 @@
+/* Package D: figures panel (#panel) and batch panel (#batch), in viewer/js/panel/.
+   Uses the variables of core.css. */
+
+/* ── Dock title (the folding block that holds both panels) ─────── */
+
+.dock-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text);
+}
+
+.dock-title::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  margin-top: -3px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  opacity: 0.6;
+  transition: transform 0.15s ease;
+}
+
+.dock[open] > .dock-title::after {
+  margin-top: 3px;
+  transform: rotate(-135deg);
+}
+
+/* ── Figures panel ─────────────────────────────────────────────── */
+
+#panel.pn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 10px 12px 10px;
+}
+
+.pn-head,
+.bt-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 18px;
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+.pn-head:empty {
+  display: none;
+}
+
+.bt-title {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.pn-sample,
+.bt-info {
+  margin-left: auto;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Live: «todo ocurre en local»; without network, «sin conexión · » in front, in red. */
+.pn-local {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.pn-local[hidden] {
+  display: none;
+}
+
+.pn-local::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pn-offline {
+  display: none;
+  white-space: pre;
+}
+
+.pn.offline .pn-local {
+  background: var(--live);
+  color: #fff;
+  font-weight: 900;
+  box-shadow: 0 2px 8px rgba(224, 65, 58, 0.35);
+}
+
+.pn.offline .pn-offline {
+  display: inline;
+}
+
+.pn-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.pn-stat {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 6px 9px 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(30, 42, 54, 0.05);
+  white-space: nowrap;
+}
+
+.pn-stat.pn-big {
+  background: var(--accent-soft);
+}
+
+.pn-value {
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pn-big .pn-value {
+  font-size: 22px;
+  color: var(--accent);
+}
+
+.pn-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pn-note {
+  display: none;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(30, 42, 54, 0.05);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pn[data-status='baseline'] .pn-note,
+.pn[data-status='none'] .pn-note,
+.pn[data-status='pending'] .pn-note {
+  display: block;
+}
+
+/* Without a model there are no samples at all: the note replaces them. */
+.pn[data-status='baseline'] .pn-perf,
+.pn[data-status='baseline'] .pn-spark,
+.pn[data-status='none'] .pn-perf,
+.pn[data-status='none'] .pn-spark {
+  display: none;
+}
+
+.pn[data-status='baseline'] .pn-tiles,
+.pn[data-status='none'] .pn-tiles {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pn-spark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+}
+
+.pn-sparklabel {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.pn-spark canvas {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  cursor: pointer;
+}
+
+.pn-max {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/* ── Batch panel ───────────────────────────────────────────────── */
+
+#batch.bt {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 0 0 auto;
+  padding: 10px 12px;
+}
+
+.bt-lanes {
+  --row-h: 44px;
+  --lines: 2;
+  --lh: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+}
+
+.bt-lanes.dense {
+  --lh: 12px;
+  gap: 0;
+  font-size: 10px;
+}
+
+.bt-lane {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: calc(var(--row-h) - 2px);
+  padding: 0 8px 0 6px;
+  border-radius: 8px;
+  background: rgba(30, 42, 54, 0.05);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.bt-lanes.dense .bt-lane {
+  height: var(--row-h);
+  border-radius: 0;
+  padding: 0 6px 0 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.bt-lanes.dense .bt-lane:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.bt-lanes.dense .bt-lane:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.bt-lane.free {
+  cursor: default;
+  background: rgba(30, 42, 54, 0.03);
+}
+
+.bt-lane:not(.free):hover {
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+/* The bar fills as the generation advances. */
+.bt-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: linear-gradient(90deg, rgba(58, 111, 216, 0.1), rgba(58, 111, 216, 0.28));
+  pointer-events: none;
+}
+
+.bt-lane.run .bt-bar {
+  box-shadow: inset -2px 0 0 var(--accent);
+}
+
+.bt-lane.done .bt-bar {
+  background: rgba(58, 111, 216, 0.08);
+}
+
+.bt-lane.idle .bt-bar {
+  background: transparent;
+}
+
+.bt-lane > span {
+  position: relative;
+}
+
+.bt-n {
+  flex: 0 0 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(30, 42, 54, 0.08);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.bt-lane.run .bt-n {
+  background: var(--accent);
+  color: #fff;
+}
+
+.bt-lanes.dense .bt-n {
+  flex-basis: 14px;
+  height: 11px;
+  border-radius: 3px;
+  font-size: 8.5px;
+}
+
+.bt-who {
+  flex: 0 0 66px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bt-lanes.dense .bt-who {
+  flex-basis: 58px;
+}
+
+/* The text keeps its last lines in view while it is being written. */
+.bt-txt {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  max-height: calc(var(--lines) * var(--lh));
+  line-height: var(--lh);
+  overflow: hidden;
+}
+
+.bt-lanes.dense .bt-txt {
+  white-space: nowrap;
+  flex-direction: row;
+}
+
+.bt-inner {
+  overflow-wrap: anywhere;
+}
+
+.bt-lane.run .bt-inner::after {
+  content: '▍';
+  color: var(--accent);
+  animation: bt-blink 1s steps(2, start) infinite;
+}
+
+@keyframes bt-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* Finished texts are read from the start. */
+.bt-lane.done .bt-txt,
+.bt-lane.idle .bt-txt {
+  justify-content: flex-start;
+}
+
+/* Dense rows hold one line: left-aligned while it fits, its tail once the
+   text being written no longer fits (class set by batch-dom.js). */
+.bt-lanes.dense .bt-txt {
+  justify-content: flex-start;
+}
+
+.bt-lanes.dense .bt-lane.run .bt-txt.tail {
+  justify-content: flex-end;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 14px);
+  mask-image: linear-gradient(to right, transparent, #000 14px);
+}
+
+.bt-lanes.dense .bt-lane:not(.run) .bt-inner {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bt-lanes.dense .bt-inner {
+  overflow-wrap: normal;
+}
+
+.bt-lane.claim .bt-inner,
+.bt-lane.plan .bt-inner {
+  font-style: italic;
+  color: var(--muted);
+}
+
+.bt-tok {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.bt-lane.run .bt-tok {
+  color: var(--accent);
+}
+
+.bt-lane.idle {
+  opacity: 0.5;
+}
+
+.bt-lane.sel {
+  box-shadow: inset 3px 0 0 var(--warm);
+}
+
+.bt-lane.bt-more {
+  justify-content: center;
+  color: var(--muted);
+  font-weight: 700;
+  cursor: default;
+}
+
+.bt-note {
+  display: none;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(30, 42, 54, 0.05);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.bt[data-mode='empty'] .bt-note,
+.bt[data-mode='before'] .bt-note {
+  display: block;
+}
+
+.bt[data-mode='empty'] .bt-lanes {
+  display: none;
+}
+
+/* No model (baseline): no «Cifras del modelo» at all, in any view. */
+.dock.pn-none {
+  display: none !important;
+}

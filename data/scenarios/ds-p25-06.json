@@ -1,0 +1,58 @@
+{
+  "name": "ds-p25-06",
+  "layout": "village",
+  "neighbors": 25,
+  "start": {
+    "day": 0,
+    "time": "07:00"
+  },
+  "end": {
+    "day": 1,
+    "time": "00:00"
+  },
+  "start_weekday": 1,
+  "forget_ppm": 300,
+  "doubt_drop_ppm": 4000,
+  "max_turns": 8,
+  "meet_ppm": 50000,
+  "pair_cooldown": 120,
+  "rest_ticks": 5,
+  "stay_ticks": 90,
+  "hop_gap": 0,
+  "hop_retries": 0,
+  "injections": [
+    {
+      "at": {
+        "day": 0,
+        "time": "07:30"
+      },
+      "what": "inheritance",
+      "text": null,
+      "who": "n021",
+      "where": null,
+      "when": null,
+      "amount": 100000,
+      "to": [
+        "n014",
+        "n025"
+      ]
+    },
+    {
+      "at": {
+        "day": 0,
+        "time": "15:30"
+      },
+      "what": "lottery",
+      "text": null,
+      "who": "n002",
+      "where": "bakery",
+      "when": null,
+      "amount": 66000,
+      "to": [
+        "n002",
+        "n007",
+        "n016"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "places": [
+    {"key": "square",        "x": 500, "y": 350},
+    {"key": "bar",           "x": 430, "y": 410},
+    {"key": "church",        "x": 440, "y": 290},
+    {"key": "market",        "x": 620, "y": 360},
+    {"key": "bakery",        "x": 560, "y": 420},
+    {"key": "school",        "x": 610, "y": 220},
+    {"key": "town_hall",     "x": 560, "y": 290},
+    {"key": "pharmacy",      "x": 380, "y": 350},
+    {"key": "fountain",      "x": 500, "y": 220},
+    {"key": "mill",          "x": 290, "y": 610},
+    {"key": "chapel",        "x": 880, "y": 110},
+    {"key": "river",         "x": 520, "y": 650},
+    {"key": "upper_quarter", "x": 480, "y": 110},
+    {"key": "lower_quarter", "x": 520, "y": 530},
+    {"key": "east_quarter",  "x": 790, "y": 380},
+    {"key": "west_quarter",  "x": 200, "y": 320}
+  ]
+}

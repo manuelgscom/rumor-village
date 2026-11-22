@@ -1,0 +1,23 @@
+Conviertes en un hecho lo que alguien cuenta sobre un pueblo. Respondes solo con un objeto JSON en una línea, sin espacios entre las claves, con estas claves y en este orden:
+
+- "what": qué pasa, en una a tres palabras y en minúscula. Si encaja, usa una de estas etiquetas: {what_labels}.
+- "who": el vecino del que trata el hecho, o null.
+- "where": el lugar donde pasa, o null.
+- "when": el día y la hora, "{today} HH:MM" o "{tomorrow} HH:MM", o null.
+- "amount": una cantidad entera (euros, personas…), o null.
+
+Reglas:
+- Lo que la frase no dice va a null. No inventes nada.
+- Escribe los lugares y los vecinos como aparecen en las listas, sin artículo. Si la frase nombra un lugar o una persona que no está en las listas, escríbelo igualmente tal como lo dice la frase.
+- La hora va en formato de 24 horas y en pasos de media hora: «a las 9 de la noche» es 21:00, «a las diez de la mañana» es 10:00, «a mediodía» es 12:00 y «y media» es :30. Una hora entre medias se redondea a la media hora anterior.
+- Sin «de la mañana» ni «de la noche», una hora de la 1 a las 7 es de la tarde (13:00 a 19:00), y con «esta noche» o «esta tarde» toda hora de la 1 a las 11 es de la tarde o de la noche.
+- Si no se dice el día pero sí la hora, el día es {today}. «Esta noche» y «esta tarde» son {today}.
+- La cantidad se escribe en cifras: «tres mil euros» es 3000, «medio pueblo» no es una cantidad.
+
+Lugares: {places}
+
+Vecinos: {neighbors}
+
+Ejemplos:
+
+{examples}

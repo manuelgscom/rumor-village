@@ -1,0 +1,1277 @@
+/* Package story: chronicle (#story), headline (#now), views, director and help
+   (#help), and the story mode (#tour).
+   Uses the tokens of core.css. Tones follow the version colors; the "ink"
+   variants are darker so text on glass stays readable. */
+
+:root {
+  --st-ink-correct: #16684f;
+  --st-ink-incomplete: #8a5a00;
+  --st-ink-wrong: #b42f40;
+  --st-ink-unknown: var(--muted);
+  --st-ink-accent: var(--accent);
+}
+
+.tone-correct { --tone: var(--c-correct); --ink: var(--st-ink-correct); }
+.tone-incomplete { --tone: var(--c-incomplete); --ink: var(--st-ink-incomplete); }
+.tone-wrong { --tone: var(--c-wrong); --ink: var(--st-ink-wrong); }
+.tone-unknown { --tone: var(--c-unknown); --ink: var(--st-ink-unknown); }
+.tone-accent { --tone: var(--accent); --ink: var(--st-ink-accent); }
+
+/* ── Chronicle ─────────────────────────────────────────────────────── */
+
+#story {
+  padding: 10px 8px 8px 12px;
+  scrollbar-width: thin;
+}
+
+.st-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 6px 6px 2px;
+}
+
+.st-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.st-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.st-empty {
+  padding: 6px 4px 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.st-btn {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  align-items: start;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 6px 5px 4px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.32;
+}
+
+.st-btn:hover {
+  background: rgba(30, 42, 54, 0.06);
+}
+
+.st-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.st-line.fresh .st-btn {
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+}
+
+.st-icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-top: -1px;
+  border-radius: 50%;
+  background: var(--tone);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.55);
+}
+
+.st-line.tone-incomplete .st-icon {
+  color: #4a3200;
+}
+
+.st-line.lo .st-icon {
+  width: 14px;
+  height: 14px;
+  margin: 4px 4px 0;
+  font-size: 0;
+  opacity: 0.8;
+}
+
+.st-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.st-main b {
+  font-weight: 800;
+}
+
+.st-line.hi .st-main {
+  font-weight: 650;
+}
+
+.st-line.lo .st-main {
+  color: var(--muted);
+}
+
+.st-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tone) 18%, transparent);
+  color: var(--ink);
+  font-size: 10.5px;
+  font-weight: 800;
+  line-height: 16px;
+  vertical-align: 1px;
+  white-space: nowrap;
+}
+
+.st-detail {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.st-detail.tone-unknown {
+  font-weight: 500;
+}
+
+.st-detail::before {
+  content: '↳ ';
+  opacity: 0.6;
+}
+
+.st-detail b {
+  font-weight: 800;
+}
+
+.st-time {
+  padding-top: 1px;
+  color: var(--faint);
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Headline ──────────────────────────────────────────────────────── */
+
+/* Below the banner, centred in the room the two columns leave. */
+.now {
+  top: calc(var(--edge) + 48px + var(--gap));
+  left: calc((var(--column-left) + 100vw - var(--column)) / 2);
+  max-width: calc(100vw - var(--column-left) - var(--column) - 4 * var(--edge));
+  width: max-content;
+  padding: 8px 18px 8px 8px;
+}
+
+.st-now {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.st-now.swap {
+  animation: st-swap 0.45s ease-out;
+}
+
+@keyframes st-swap {
+  from {
+    opacity: 0.15;
+    transform: translateY(-4px);
+  }
+}
+
+.st-now-label {
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--text);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.st-now-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--tone);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+/* SVG icons of core/icons.js in the chronicle and the headline (phase 8-2,
+   2.14): phrase.js gives iconName; a bit bolder than the default stroke. */
+.st-icon .icon {
+  width: 13px;
+  height: 13px;
+  stroke-width: 2.2;
+}
+
+.st-line.lo .st-icon .icon {
+  display: none;
+}
+
+.st-now-icon .icon {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.2;
+}
+
+.st-now-icon[hidden] {
+  display: none;
+}
+
+.st-now.tone-incomplete .st-now-icon {
+  color: #4a3200;
+}
+
+.st-now-text {
+  font-weight: 600;
+}
+
+.st-now-text b {
+  font-weight: 850;
+}
+
+/* ── Floating buttons: director and help ───────────────────────────── */
+
+.st-fab {
+  position: absolute;
+  right: calc(var(--column) + 2 * var(--edge));
+  bottom: calc(var(--edge) + 72px + var(--gap));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  z-index: 5;
+}
+
+/* Over the telephone strip (rumor.css, <html data-strip>). */
+:root[data-strip] .st-fab {
+  bottom: calc(var(--edge) + 72px + 2 * var(--gap) + var(--strip));
+}
+
+.st-fab button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-soft);
+  color: var(--text);
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.st-fab button:hover {
+  background: var(--glass-strong);
+}
+
+
+.st-fab .st-view {
+  height: 32px;
+  padding: 0 11px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* The view switch sits on its own row, above the director and «?». */
+.st-fab-row {
+  display: flex;
+  gap: 8px;
+}
+
+.st-fab .st-views {
+  display: inline-flex;
+  gap: 0;
+  padding: 0 4px;
+  align-items: center;
+  height: 40px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-soft);
+}
+
+.st-fab .st-view:hover {
+  background: rgba(30, 42, 54, 0.07);
+}
+
+.st-fab .st-view.on {
+  background: var(--text);
+  color: #fff;
+}
+
+.st-fab button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* While the story mode runs, its card has the controls. */
+:root[data-tour] .st-fab {
+  display: none;
+}
+
+.st-fab .st-q {
+  width: 40px;
+  padding: 0;
+  justify-content: center;
+  font-size: 17px;
+}
+
+.st-dir.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.st-dir.on:hover {
+  background: #2f5fc0;
+}
+
+.st-dir.on::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  animation: st-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes st-pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* ── Guide ─────────────────────────────────────────────────────────── */
+
+.st-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: var(--edge);
+  background: rgba(18, 28, 45, 0.28);
+}
+
+.st-veil[hidden] {
+  display: none;
+}
+
+.st-guide {
+  position: relative;
+  width: min(440px, 100%);
+  padding: 22px 24px 18px;
+  border-radius: 20px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--shadow);
+}
+
+.st-x {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.st-x:hover {
+  background: rgba(30, 42, 54, 0.07);
+}
+
+.st-step {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.st-gtitle {
+  margin: 2px 0 8px;
+  font-size: 21px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.st-gsub {
+  margin: 14px 0 6px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.st-gbody {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+
+.st-legend,
+.st-howto {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 14.5px;
+}
+
+.st-legend li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.st-swatch {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex: none;
+  box-shadow: 0 0 0 2px #fff, 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.st-swatch.v-correct { background: var(--c-correct); }
+.st-swatch.v-incomplete { background: var(--c-incomplete); color: #4a3200; }
+.st-swatch.v-wrong { background: var(--c-wrong); }
+.st-swatch.v-unknown { background: var(--c-unknown); }
+
+.st-howto b {
+  font-weight: 800;
+}
+
+.st-gnav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.st-guide {
+  max-height: calc(100% - 2 * var(--edge));
+  overflow: auto;
+}
+
+.st-howto {
+  font-size: 13.5px;
+  gap: 4px;
+}
+
+.st-dots {
+  display: flex;
+  gap: 6px;
+  margin-right: auto;
+}
+
+.st-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.st-dots span.on {
+  background: var(--accent);
+}
+
+.st-gbtn {
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.st-gbtn.ghost {
+  background: none;
+  color: var(--muted);
+}
+
+.st-gbtn:disabled {
+  visibility: hidden;
+}
+
+/* ── Story mode (#tour) ────────────────────────────────────────────── */
+
+#tour {
+  position: absolute;
+  left: calc((var(--column-left) + 100vw - var(--column)) / 2);
+  bottom: calc(var(--edge) + 72px + var(--gap));
+  transform: translateX(-50%);
+  width: min(540px, calc(100vw - var(--column-left) - var(--column) - 4 * var(--edge)));
+  z-index: 6;
+}
+
+#tour[hidden] {
+  display: none;
+}
+
+/* The last chapter leaves the middle to the summary card and its pill
+   (summary.css) and takes the place of the rumor card, in the left column. */
+#tour[data-chapter='7'] {
+  top: calc(var(--edge) + 48px + var(--gap));
+  bottom: auto;
+  left: var(--edge);
+  transform: none;
+  width: var(--column-left);
+}
+
+#tour[data-chapter='7'] .tr-nav {
+  flex-wrap: wrap;
+}
+
+#tour[data-chapter='7'] .tr-explore {
+  flex-basis: 100%;
+  margin: 4px 0 0;
+}
+
+.tr-card {
+  position: relative;
+  padding: 14px 18px 12px;
+  border-radius: 18px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.tr-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 30px;
+}
+
+.tr-label {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tr-who {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.tr-who b {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.tr-x {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tr-x:hover {
+  background: rgba(30, 42, 54, 0.07);
+}
+
+.tr-title {
+  margin: 8px 0 4px;
+  font-size: 21px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.tr-body {
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+
+.tr-text {
+  margin: 0 0 4px;
+}
+
+.tr-text b {
+  font-weight: 800;
+}
+
+.tr-body .st-legend {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 6px 0 2px;
+  font-size: 13.5px;
+}
+
+.tr-body .st-legend li {
+  gap: 7px;
+}
+
+.tr-body .st-swatch {
+  font-size: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  width: 13px;
+  height: 13px;
+}
+
+.tr-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.tr-btn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.tr-btn:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+
+.tr-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.tr-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.tr-icon.tr-back,
+.tr-icon.tr-next {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tr-icon.tr-play,
+.tr-icon.tr-pause {
+  fill: currentColor;
+}
+
+.tr-dots {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0 2px;
+}
+
+.tr-dot {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.tr-dot::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.tr-dot.done::after {
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.tr-dot.on::after {
+  inset: 4px;
+  background: var(--accent);
+}
+
+.tr-btn:focus-visible,
+.tr-dot:focus-visible,
+.tr-explore:focus-visible,
+.tr-x:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tr-explore {
+  margin-left: auto;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font-weight: 800;
+  font-size: 13.5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tr-explore:hover {
+  background: var(--surface-2);
+}
+
+/* The last chapter hands over: «Explore on my own» becomes the main button. */
+.tr-explore.last {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.tr-explore.last:hover {
+  background: #2f5fc0;
+}
+
+.tr-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: transparent;
+}
+
+.tr-progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  opacity: 0.55;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+@media (max-width: 900px) {
+  .st-fab .st-dir-label {
+    display: none;
+  }
+  .st-fab .st-dir {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+  .st-dir.on::after {
+    display: none;
+  }
+}
+
+/* Phones (phase 8-1, 1.12): only the story mode, its sentence and the bar. */
+@media (max-width: 600px) {
+  #tour,
+  #tour[data-chapter='7'] {
+    top: auto;
+    left: var(--edge);
+    right: var(--edge);
+    bottom: calc(var(--edge) + 64px + var(--gap));
+    width: auto;
+    transform: none;
+  }
+
+  #tour .tr-x,
+  #tour .tr-explore,
+  #tour .tr-text ~ :not(.tr-text) {
+    display: none;
+  }
+}
+
+/* ── Guided first game (story/tutorialview.js; phase 9) ─────────────
+   The card reuses the look of the story mode (.tr-*). It floats over the
+   game screens (#game, z-index 30) and under #start (40); it sits low, or at
+   the top (.tu-top) when what it points at is in the lower half. The ring
+   (.tu-ring) goes around that element and lets clicks through. */
+
+.tu-root {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--edge) + 72px + var(--gap));
+  transform: translateX(-50%);
+  width: min(540px, calc(100vw - 2 * var(--edge)));
+  z-index: 35;
+}
+
+.tu-root.tu-top {
+  top: calc(var(--edge) + 48px + var(--gap));
+  bottom: auto;
+}
+
+.tu-root[hidden],
+.tu-ring[hidden] {
+  display: none;
+}
+
+.tu-root .tr-nav {
+  flex-wrap: wrap;
+}
+
+.tu-root .tr-explore[hidden],
+.tu-root .tr-card[hidden],
+.tu-pill[hidden] {
+  display: none;
+}
+
+/* The dots on the left, the buttons together on the right (the nav's gap between them). */
+.tu-root .tr-dots {
+  margin-right: auto;
+}
+
+.tu-root .tr-nav .tr-explore {
+  margin-left: 0;
+}
+
+.tu-root .tr-dot {
+  width: 13px;
+  cursor: default;
+}
+
+/* Narrower dots, so the dots and the three buttons fit on one line. */
+.tu-root .tr-dot::after {
+  inset: 5px 2.5px;
+}
+
+.tu-root .tr-dot.on::after {
+  inset: 4px 1.5px;
+}
+
+.tu-step {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.tu-hint {
+  color: var(--muted);
+}
+
+/* «Entonces recibió · 12:13» and «Ahora recuerda» over the summary of «¿Qué pensó?». */
+.tu-tag {
+  margin: 8px 0 2px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tu-tag b {
+  font-weight: 800;
+}
+
+.tu-decide-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+
+.tu-decide-row .tr-explore {
+  margin-left: 0;
+}
+
+.tu-when {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* The folded card: a pill that opens it again. */
+.tu-pill {
+  display: block;
+  margin: 0 auto;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 13.5px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.tu-pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The title takes the focus when the card opens again (for screen readers), without a frame. */
+.tu-root .tr-title:focus {
+  outline: none;
+}
+
+.tu-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 34;
+  border: 3px solid var(--accent);
+  border-radius: 14px;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent);
+  pointer-events: none;
+  animation: tu-pulse 1.6s ease-in-out infinite;
+}
+
+.tu-ring.round {
+  border-radius: 50%;
+}
+
+@keyframes tu-pulse {
+  50% {
+    box-shadow: 0 0 0 11px color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tu-ring {
+    animation: none;
+  }
+}
+
+:root[data-photo] .tu-root,
+:root[data-photo] .tu-ring {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .tu-root,
+  .tu-root.tu-top {
+    left: var(--edge);
+    right: var(--edge);
+    width: auto;
+    transform: none;
+  }
+
+  /* The reading panel of «Ver qué decidió» can be long: the card scrolls. */
+  .tu-root .tu-card {
+    max-height: calc(100dvh - 2 * var(--edge) - 120px);
+    overflow-y: auto;
+  }
+}
+
+/* ── «Cómo funciona», part 1 of the tutorial (story/howtoview.js; 9-5) ──
+   Eight cards in the look of the story mode (.tr-*), centred over the still
+   village, each with a small drawing (.ho-art). */
+
+.ho-root {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(580px, calc(100vw - 2 * var(--edge)));
+  max-height: calc(100dvh - 2 * var(--edge));
+  display: flex;
+  z-index: 35;
+}
+
+.ho-root .ho-card {
+  width: 100%;
+  overflow-y: auto;
+}
+
+.ho-root .tr-title:focus {
+  outline: none;
+}
+
+.ho-root .tr-nav {
+  flex-wrap: wrap;
+}
+
+.ho-root .tr-nav .tr-explore {
+  margin-left: 0;
+}
+
+.ho-root .tr-dots {
+  margin: 0 auto 0 4px;
+}
+
+.ho-root .tr-dot {
+  cursor: default;
+}
+
+.ho-root .tr-explore[hidden] {
+  display: none;
+}
+
+.ho-root .tr-explore:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.ho-art {
+  margin: 10px 0 2px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.ho-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.ho-chip {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ho-chip.ho-you {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.ho-arrow {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.ho-label,
+.ho-step small,
+.ho-cast small,
+.ho-note {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.ho-place {
+  font-weight: 800;
+}
+
+.ho-bubble {
+  font-size: 20px;
+}
+
+.ho-discs {
+  display: inline-flex;
+  gap: 6px;
+  padding: 0 2px;
+}
+
+.ho-step {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.ho-cast {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.ho-cast li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.ho-icon {
+  flex: none;
+  width: 1.4em;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.ho-who small {
+  display: block;
+}
+
+/* Card 4: the real exchange, Con IA and Sin IA side by side, and «¿Qué pensó?». */
+.ho-show {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 10px;
+}
+
+.ho-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ho-think,
+.ho-other,
+.ho-note {
+  grid-column: 1 / -1;
+}
+
+.ho-tag {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ho-say {
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.ho-say.ho-plain {
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+}
+
+/* «Otro momento: ¿qué pensó Fernando?»: its own block, apart from the exchange above. */
+.ho-think {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.ho-think > summary {
+  margin-top: 2px;
+}
+
+.ho-cast-note {
+  margin: 8px 0 0;
+}
+
+.ho-say.ho-checked {
+  color: var(--muted);
+}
+
+.ho-read summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.ho-read pre {
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+.ho-note {
+  margin: 0;
+}
+
+.ho-more {
+  margin-top: 10px;
+}
+
+:root[data-photo] .ho-root {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .ho-show {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The help of the game over the game bar and its cards (#game, z-index 30, 41 at the end). */
+:root[data-game] .st-veil {
+  position: fixed;
+  z-index: 42;
+}
