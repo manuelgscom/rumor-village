@@ -8,4 +8,4 @@
  *                   version offers instead of Con IA.
  */
 export const PUBLIC_WEB_URL = '';
-export const DOWNLOAD_URL = '';
+export const DOWNLOAD_URL = 'https://github.com/manuelgscom/rumor-village/releases/latest';
