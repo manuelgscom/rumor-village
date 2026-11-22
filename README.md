@@ -2,9 +2,9 @@
 
 **A rumor simulation game with an AI trained for it.** Drop a rumor into a 3D village of up to 100 neighbors and watch it travel from mouth to mouth, get twisted on the way and send people to the wrong place at the wrong time. Every neighbor is driven by a small language model fine-tuned for this game, running on your own graphics card. Offline, no accounts.
 
-[![Download for Linux and Windows](https://img.shields.io/badge/download-Linux%20%C2%B7%20Windows-2ea44f)](https://github.com/manuelgscom/rumor-village/releases/latest) [![Model on Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20model-rumor--village--e4b--GGUF-FFD21E)](https://huggingface.co/manuelgscom/rumor-village-e4b-GGUF) [![license: MIT](https://img.shields.io/badge/code-MIT-e36209)](LICENSE) [![model: Apache-2.0](https://img.shields.io/badge/model-Apache--2.0-e36209)](https://huggingface.co/manuelgscom/rumor-village-e4b-GGUF/blob/main/LICENSE) [![llama.cpp: CUDA or Vulkan](https://img.shields.io/badge/llama.cpp-CUDA%20%C2%B7%20Vulkan-8250df)](https://github.com/ggml-org/llama.cpp)
+[![Play in your browser](https://img.shields.io/badge/play%20in%20your%20browser-web%20demo-1f6feb)](https://manuelgs.com/en/rumor-village/demo/) [![Download for Linux and Windows](https://img.shields.io/badge/download-Linux%20%C2%B7%20Windows-2ea44f)](https://github.com/manuelgscom/rumor-village/releases/latest) [![Model on Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20model-rumor--village--e4b--GGUF-FFD21E)](https://huggingface.co/manuelgscom/rumor-village-e4b-GGUF) [![license: MIT](https://img.shields.io/badge/code-MIT-e36209)](LICENSE) [![model: Apache-2.0](https://img.shields.io/badge/model-Apache--2.0-e36209)](https://huggingface.co/manuelgscom/rumor-village-e4b-GGUF/blob/main/LICENSE) [![llama.cpp: CUDA or Vulkan](https://img.shields.io/badge/llama.cpp-CUDA%20%C2%B7%20Vulkan-8250df)](https://github.com/ggml-org/llama.cpp)
 
-Website: <https://manuelgs.com/en/>
+Website: <https://manuelgs.com/en/rumor-village/> · **[Play the web demo](https://manuelgs.com/en/rumor-village/demo/)**, in your browser, no download
 
 https://github.com/user-attachments/assets/153ea4bf-3702-4a12-9a14-b80c25e7e183
 
@@ -13,6 +13,8 @@ https://github.com/user-attachments/assets/153ea4bf-3702-4a12-9a14-b80c25e7e183
 https://github.com/user-attachments/assets/17f7c9b1-cbb3-46f0-8ddb-758592076aab
 
 *Under the hood: 100 neighbors deciding in one batch on one GPU, the card the model read, the JSON it answered and the engine's verdict, base against fine-tuned.*
+
+**No GPU or no time to download? [Play the web demo](https://manuelgs.com/en/rumor-village/demo/)**: the same village and challenges in your browser, Without AI (rules with dice). With AI needs the downloaded game.
 
 ## Download and play
 
@@ -144,4 +146,4 @@ The player guide is [docs/guia-jugador.en.md](docs/guia-jugador.en.md). The cont
 
 The code is [MIT](LICENSE). The model is Apache-2.0, fine-tuned from Google's [Gemma 4 E4B](https://huggingface.co/google/gemma-4-E4B-it). Third-party notices travel with every package (`THIRD_PARTY_NOTICES.txt`). The 3D characters and buildings are by Kenney (CC0).
 
-Made by **Manuel García Sanz** · <https://manuelgs.com/en/>
+Made by **Manuel García Sanz** · <https://manuelgs.com/en/rumor-village/> · [web demo](https://manuelgs.com/en/rumor-village/demo/)

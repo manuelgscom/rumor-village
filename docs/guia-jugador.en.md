@@ -161,7 +161,7 @@ Delete the game's folder (on Linux, the AppImage file) and the data folder ([Whe
 
 ### The web version "Without AI"
 
-The same game, in the browser, without downloading anything. It is not published yet.
+The same game, in the browser, without downloading anything. It is at <https://manuelgs.com/en/rumor-village/demo/> (in Spanish: <https://manuelgs.com/rumor-village/demo/>), and the game's page, at <https://manuelgs.com/en/rumor-village/>.
 
 - **It only plays Without AI.** When you choose With AI, or at the end of the game, it offers you "Download it to play With AI": With AI is played with the downloaded package, on your computer.
 - **Your progress lives in that browser.** "My games" and your profile (stars and tutorial seen) are saved in that browser, on that computer. **If you clear the browser's data, they are lost,** and they do not move to another browser or to the downloaded game. In a private window, or with site data blocked, you play the same, but the progress is lost when you close it.

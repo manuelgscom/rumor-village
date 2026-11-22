@@ -7,5 +7,5 @@
  *   DOWNLOAD_URL    the page to download the game Con IA, which the web
  *                   version offers instead of Con IA.
  */
-export const PUBLIC_WEB_URL = '';
+export const PUBLIC_WEB_URL = 'https://manuelgs.com/en/rumor-village/demo/play-web.html';
 export const DOWNLOAD_URL = 'https://github.com/manuelgscom/rumor-village/releases/latest';
